@@ -1,0 +1,13 @@
+Model CNV_w1a1 was wrong. In the first Linear, activation was appended to conv_features. Therefore, it was applied after GlobalAverage.
+        self.conv_features.append(
+            QuantIdentity(
+                act_quant=CommonActQuant,
+                bit_width=act_bit_width, 
+                return_quant_tensor=self.return_quant_tensor))
+
+This caused a problem in FINN, as first Linear did not have a Multithreshold afterwards.
+Test 30 and 31 must be repeated.
+All test with bigger nets are wrong.
+
+
+CNV_w1a1_BIG changed name to CNV_w1a1_DEEP

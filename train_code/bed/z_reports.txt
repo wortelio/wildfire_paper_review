@@ -1,0 +1,88 @@
+FINAL EXPERIMENTS and MODEL USED WITH FINN:
+
+    - Folder: experiments_bed_evolution
+    - Model: modules/models_bed_evolution/bed_05_brevitas_fpga_old_small_big.py
+    - Evolution:
+        * Original
+        * downto_28
+        * downto_28
+            # Experiment: 16_downto_28_aimet__big_aimet_ds__conv1__full_ds
+        * Final FPGA version, with w2a2 in some layers:
+            # Experiment: 71_brevitas__230_manual_old_SmallBig__full_ds
+            # TRAINED with BATCH 128
+                EPOCH 131, F1 Mean 94,54
+                VAL Stats
+                Total Loss |Smoke Loss|Fire Loss |    _______|Accuracy |Precision|Recall   |F1       |
+                -----------|----------|----------|    Smoke  |0.9377   |0.9617   |0.9038   |0.9318   |
+                27.30      |17.89     |9.41      |    Fire   |0.9729   |0.9433   |0.9750   |0.9589   |
+
+                Saving model with new best validation loss: 27.2990
+                Saving model with best Mean F1: 0.9454
+
+
+
+Model: 
+    - model_CNV_AIMET_NoPadding_FPGA_imagenet
+        # Process to get it:
+            * Aimet
+            * Aimet with BN and ReLU after Spatial SVD, to pass FINN streamline
+            * Aimet with BN and QuantIdentity after Spatial SVD, to pass FINN streamline
+            * Aimet balanced: all layers fit in BRAM with good efficiency
+            * Reorder channels to decrease MAcs
+
+        # experiment: test_v13__AIMET_BN_ReLU_added__NoPadding__QuantIdentity
+            * best model: epoch 78, F1: 0.9432
+                VAL Stats
+                Total Loss |Smoke Loss|Fire Loss |    _______|Accuracy |Precision|Recall   |F1       |
+                -----------|----------|----------|    Smoke  |0.9335   |0.9437   |0.9134   |0.9283   |
+                14.15      |9.30      |4.85      |    Fire   |0.9725   |0.9492   |0.9670   |0.9580   |
+            
+        # This is the model used in FINN to get 700 FPS
+
+    - same model as before, with all weights as 4 bits, to use efficient DSP for RTL layers
+    
+w1a1:
+
+    - 740K: experiments_resnet/test_v36__w1a1__DEEPER_Resnet_V5__clip1__full_ds
+    
+            === EPOCH 129/149 ===
+            VAL Stats
+            Total Loss |Smoke Loss|Fire Loss |    _______|Accuracy |Precision|Recall   |F1       |
+            -----------|----------|----------|    Smoke  |0.9324   |0.9469   |0.9075   |0.9268   |
+            13.37      |9.38      |3.99      |    Fire   |0.9762   |0.9538   |0.9739   |0.9637   |
+
+            Saving model with new best validation loss: 13.3667
+            Saving model with best Mean F1: 0.9453
+    
+    
+    - 550K
+        # experiments: test_v341__w1a1__WIDE__550k_full_ds
+        # best model: epoch 92, F1: 0.8359
+            VAL Stats
+            Total Loss |Smoke Loss|Fire Loss |    _______|Accuracy |Precision|Recall   |F1       |
+            -----------|----------|----------|    Smoke  |0.8125   |0.8081   |0.7899   |0.7989   |
+            37.51      |23.48     |14.03     |    Fire   |0.9187   |0.8852   |0.8610   |0.8729   |
+            
+    - 93K: ojo, en el log del experiment está añadido el de un 550k, porque no debí cambiar el nombre en config
+        # experiments: test_v37__w1a1__OriNet_Linear4__IdentityGlobalAvg_Deleted__93k_full_ds
+        # best model: epoch 94, F1: 0.8262
+            VAL Stats
+            Total Loss |Smoke Loss|Fire Loss |    _______|Accuracy |Precision|Recall   |F1       |
+            -----------|----------|----------|    Smoke  |0.8083   |0.7976   |0.7953   |0.7964   |
+            39.58      |24.55     |15.03     |    Fire   |0.9094   |0.8830   |0.8307   |0.8560   |
+            
+    - 300k, DEEP: 
+    hay un poco de lío en el log del test01 y test02, porque parece que hay 2 experimentos seguidos, por no cambiar el nombre en config
+    hasta el último experimento no parece que pusiera ReLUs ok en las linear
+            { more layers, like original model
+            { 150 epochs
+            { Resnets added
+            { Clip gradients by value
+            { Clip weights of convs, as Linear layers are 4 bits
+        # experiments: test_v03__w1a1__DEEP_Resnet__clip_convs_Linear4ReLU__400k_full_ds
+        # best model: epoch 130, F1: 0.8817
+            VAL Stats
+            Total Loss |Smoke Loss|Fire Loss |    _______|Accuracy |Precision|Recall   |F1       |
+            -----------|----------|----------|    Smoke  |0.8580   |0.8779   |0.8116   |0.8435   |
+            26.79      |17.74     |9.05      |    Fire   |0.9470   |0.9016   |0.9390   |0.9199   |
+    

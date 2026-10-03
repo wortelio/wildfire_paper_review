@@ -1,0 +1,6 @@
+Changes:
+
+    train_epoch:
+        - Comment global_clip_norm
+        - add clip weights if model has such attribute
+
