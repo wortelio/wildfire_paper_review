@@ -6,6 +6,10 @@ Assist with the scientific revision of a paper on edge AI and FPGA implementatio
 
 The final objective is to address all reviewer comments rigorously while preserving scientific reproducibility and experimental provenance.
 
+## Legacy
+
+This is an investigation finished at March 2025, so it is a long time since it was done and the code has not been reviewed since then. The user has been kept in the remote server and folders and files are untouched, so eveything should work again, unless updates were performed in HW, specially in the CUDA version of the GPU, which could break the use of the libraries in the conda environments.
+
 ## Read these project instructions first
 
 Before substantial work, read:

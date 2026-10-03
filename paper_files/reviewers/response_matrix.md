@@ -170,6 +170,8 @@ Sources: `../paper_comments.md` and the provenance audit of 2026-10-03.
 | A-4 | Training details missing or inconsistent with the logs: weight decay (0.001 / 1e-5 / 0), smoke-precision-weighted loss, epochs 100–150 | §II-B | IC, VR | WP4 | Verify in the code and logs, then report accurately | S | P1 | STRONG EVIDENCE from `logfile.log` headers | Open | |
 | A-5 | Normalization: the paper says [-1, 1], the dataloader divides by 255 to give [0, 1] | §II-A | VR, IC | WP4 | Check whether a model-level or FINN pre-processing node rescales | S | P2 | INFERENCE / HYPOTHESIS (`prepro_node.onnx`, TensorNorm) | Open | |
 | A-6 | Parameter counts in the paper vs logs: ReLU6 68914 vs 68893; Width-0.1 78311 vs 78258 | Table 5 | VR, TB | WP10 | Re-check and fix | XS | P2 | STRONG EVIDENCE (logs `test_v41`, `test_v21_Original`) | Open | |
+| A-7 | The augmentation list in §II-A is incomplete. The real pipeline also has HorizontalFlip, CLAHE, RGBShift and scale; Blur 17×17 is applied at full resolution before Resize; a silent `try/except` falls back to other transforms | §II-A | IC, CL | WP4 | Describe the actual pipeline | XS | P2 | VERIFIED (`train/mobilenet/modules/dataloaders.py` `get_train_loader`, `dataset_dfire.py` `__getitem__`) | Open | |
+| A-8 | AIMET greedy compression-ratio search and channel-pruning reconstruction for BED used 2048 **test** images (`aimet_val_loader`) | §II-C2, Table 3 | IC, RR | WP4 | Disclose. Re-run the greedy search on the new validation split and compare the per-layer ratios (see `discussion.md` §7–8) | M | P1 | VERIFIED (`train/bed/aimet_spatial_svd_then_pruning_fasdd.ipynb`) | Open | |
 
 ---
 
