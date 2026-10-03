@@ -13,7 +13,7 @@ Background and decisions: `paper_files/discussion.md` (sections 4–8). Tracking
 ## Rules
 
 1. **`~/uav` is read-only historical evidence.** Code here may read datasets and checkpoints from `~/uav`, but must never write there. `common/write_guard.py` enforces this at run time.
-2. **`code/` is never edited.** `code/train/**` and `code/finn/**` are byte-identical copies of the historical code (verified 2026-10-03 with `cmp`), and that identity is part of the provenance evidence. The original modules are imported unchanged, and their global `config` is replaced at import time by `common/config_shim.py`.
+2. **`code/` is never edited.** `code/train/**` and `code/finn/**` are byte-identical copies of the historical `~/uav` working tree (verified 2026-10-03 with `cmp`), and that identity is part of the provenance evidence. The original modules are imported unchanged, and their global `config` is replaced at import time by `common/config_shim.py`. **The working tree is not the paper-era code** (see `common/README.md`), so paper runs are audited with the code of the `~/uav` revision `455f115`, extracted read-only by `common/snapshot.py`.
 3. **Copy-on-write for code changes.** If a phase needs a modified module (e.g. seeds or a validation split in F3), it is copied into that phase's folder and its diff against the original is documented in the phase README.
 4. **Every result records its provenance:** git commit, conda environment, package versions, GPU, date, run spec and command (`common/env_capture.py`).
 5. **Outputs:**
@@ -30,7 +30,9 @@ results_audit/
 │   ├── config_shim.py     # builds the `config` module of each historical run (no mkdir, no relative paths)
 │   ├── write_guard.py     # aborts on any write attempt under ~/uav
 │   ├── env_capture.py     # provenance record for every result
+│   ├── snapshot.py        # historical code at a ~/uav git revision (paper era: 455f115)
 │   └── run_specs/         # one spec per historical run used in the paper
+├── mobilenet_paper_replica/  # self-contained replica of MobileNetV2 Nano FP32 (paper Tables 5, 8): config + modules + validate_paper_metrics.ipynb
 ├── f0_selection_bias/     # F0: re-evaluate historical checkpoints (sanity gate + best-vs-last bias) and timing
 ├── f1_duplicates/         # F1: exact / perceptual / embedding near-duplicate analysis (train <-> test)
 ├── f2_splits/             # F2: group-aware train/val split; versioned file lists
@@ -43,6 +45,7 @@ results_audit/
 | Phase | Status |
 |---|---|
 | T0 structure | Done |
-| T1 common infrastructure | Pending |
+| T1 common infrastructure | Done (see `common/README.md`: the active code copy is not usable as-is; paper-era snapshot `455f115` is used) |
+| mobilenet_paper_replica | Prepared (model = test_v04 epoch 86, VERIFIED); evaluation pending |
 | F0 | Pending |
 | F1, F2, F-AIMET, F3 | Not started; scope decided after F0 |

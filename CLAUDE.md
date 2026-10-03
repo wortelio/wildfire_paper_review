@@ -10,6 +10,19 @@ The final objective is to address all reviewer comments rigorously while preserv
 
 This is an investigation finished at March 2025, so it is a long time since it was done and the code has not been reviewed since then. The user has been kept in the remote server and folders and files are untouched, so eveything should work again, unless updates were performed in HW, specially in the CUDA version of the GPU, which could break the use of the libraries in the conda environments.
 
+## State of the copied code (important)
+
+The code in `~/wildfire_paper_review/code/` is a copy of the **last state of `~/uav` before the project was abandoned**, not a snapshot of the paper experiments:
+
+- Each `config.py` holds the settings of the **last experiment run** in that folder (e.g. FIgLib, ShiftReLU or 5-epoch tests). These are not necessarily the settings of the runs reported in the paper. **Never assume a `config.py` reflects a paper result.**
+- **Intended design (user, 2026-10-03):** the selection of files copied from `~/uav` should contain everything needed to reconstruct the paper results. The only changes needed should be small edits to the `config.py` settings (dataset flags, model, bit widths, image size, run folder, …). The settings of each paper run must be recovered from its historical log header (`logs/logfile.log`), notebook outputs and Git history.
+- **Known exceptions to that design** (VERIFIED by the audit self-test, see `results_audit/common/README.md`):
+  1. `code/train/bed/modules/models_bed_evolution/bed_05_brevitas_fpga_old_small_big.py`: the current file defines a later "all 4-bit / multiples of 8" variant. The deployed BED FPGA architecture of Table 4 is commented out in it and is active only at `~/uav` revision `455f115`. Here a model file differs, not just a `config.py`.
+  2. `code/train/mobilenet/config.py`: has an `assert FOG+SICILIA+FIGLIB == 1` added after the paper, so it needs more than a value change to select DFire+FASDD.
+  3. `code/train/baseline_transfer_learning/modules/dataset_fasdd.py` exists, but `dataset_dfire.py` was not copied.
+  4. The FINN build folder of the deployed MobileNetV2 Nano (`~/uav/finn/notebooks/uav_finn/classification/my_mblnet_resnet_to_finn_driver`) was not copied. `code/finn/mobilenet/to_finn_driver/my_mblnet_to_finn_driver` uses a different model.
+- **Policy:** files in `code/` are kept byte-identical to `~/uav` (provenance evidence). Paper runs are reproduced through `results_audit/` (`common/config_shim.py` overrides `config.py` values without editing the file; `common/snapshot.py` provides the paper-era code `455f115` where needed). Any change to code goes into a copy, with its diff documented.
+
 ## Read these project instructions first
 
 Before substantial work, read:

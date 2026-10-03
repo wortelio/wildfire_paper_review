@@ -1,0 +1,523 @@
+{
+  "guard": {
+    "uav_protected": true,
+    "code_protected": true,
+    "audit_not_protected": true,
+    "blocked_on_scratch": {
+      "open_w": true,
+      "open_a": true,
+      "mkdir": true,
+      "os_open_creat": true
+    },
+    "scratch_still_empty": true,
+    "read_uav_allowed": true
+  },
+  "families": {
+    "mobilenet@active": {
+      "error": "AssertionError: FOG 0 + SICILIA 0 + FIGLIB 0 should be 1",
+      "returncode": 1,
+      "stderr_tail": "Traceback (most recent call last):\n  File \"/opt/conda/envs/pytorch_23/lib/python3.10/runpy.py\", line 196, in _run_module_as_main\n    return _run_code(code, main_globals, None,\n  File \"/opt/conda/envs/pytorch_23/lib/python3.10/runpy.py\", line 86, in _run_code\n    exec(code, run_globals)\n  File \"/home/gmoreno/wildfire_paper_review/results_audit/common/selftest.py\", line 131, in <module>\n    main()\n  File \"/home/gmoreno/wildfire_paper_review/results_audit/common/selftest.py\", line 104, in main\n    print(json.dumps(run_family(args.family, args.rev), default=str))\n  File \"/home/gmoreno/wildfire_paper_review/results_audit/common/selftest.py\", line 77, in run_family\n    cfg = config_shim.build_config(family, run_dir, fixed=fixed, code_root=code_root)\n  File \"/home/gmoreno/wildfire_paper_review/results_audit/common/config_shim.py\", line 80, in build_config\n    exec(compile(src, str(src_path), 'exec'), exec_globals, ns)\n  File \"/home/gmoreno/wildfire_paper_review/code/train/mobilenet/config.py\", line 30, in <module>\n    assert FOG+SICILIA+FIGLIB == 1, f'FOG {FOG} + SICILIA {SICILIA} + FIGLIB {FIGLIB} should be 1'\nAssertionError: FOG 0 + SICILIA 0 + FIGLIB 0 should be 1\n"
+    },
+    "mobilenet@455f115": {
+      "family": "mobilenet",
+      "code": "455f115",
+      "code_root": "/home/gmoreno/wildfire_paper_review/results_audit/common/artifacts/snapshots/455f115166e7/code/classifier_my_mobilenetv2",
+      "env": "pytorch_23",
+      "NUM_CLASSES": 2,
+      "IMG": [
+        224,
+        224
+      ],
+      "DEVICE": "cuda",
+      "RUN_FOLDER": "/home/gmoreno/wildfire_paper_review/results_audit/common/artifacts/selftest/mobilenet@455f115/",
+      "paths": {
+        "DFIRE_TRAIN_IMG_DIR": {
+          "value": "/home/gmoreno/uav/datasets/ds2fire/dfire_yolo/train/images/",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "DFIRE_TEST_IMG_DIR": {
+          "value": "/home/gmoreno/uav/datasets/ds2fire/dfire_yolo/test/images/",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "DFIRE_TEST_LABEL_DIR": {
+          "value": "/home/gmoreno/uav/datasets/ds2fire/dfire_yolo/test/labels/",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "FASDD_UAV_IMGS_DIR": {
+          "value": "/home/gmoreno/uav/datasets/fasdd/fasdd_uav/images/",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "FASDD_UAV_TEST_LABELS_FILE": {
+          "value": "/home/gmoreno/uav/datasets/fasdd/fasdd_uav/annotations/YOLO_UAV/test.txt",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "FASDD_CV_IMGS_DIR": {
+          "value": "/home/gmoreno/uav/datasets/fasdd/fasdd_cv/images/",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "FASDD_CV_TEST_LABELS_FILE": {
+          "value": "/home/gmoreno/uav/datasets/fasdd/fasdd_cv/annotations/YOLO_CV/test.txt",
+          "exists": true,
+          "under_uav_datasets": true
+        }
+      },
+      "val_subset_len": 192,
+      "batch": {
+        "x_shape": [
+          64,
+          3,
+          224,
+          224
+        ],
+        "x_min": 0.0,
+        "x_max": 1.0,
+        "y_shape": [
+          64,
+          2
+        ],
+        "y_unique": [
+          0.0,
+          1.0
+        ]
+      },
+      "modules_path": [
+        "/home/gmoreno/wildfire_paper_review/results_audit/common/artifacts/snapshots/455f115166e7/code/classifier_my_mobilenetv2/modules"
+      ]
+    },
+    "bed@active": {
+      "family": "bed",
+      "code": "active",
+      "code_root": "/home/gmoreno/wildfire_paper_review/code/train/bed",
+      "env": "pytorch_23",
+      "NUM_CLASSES": 2,
+      "IMG": [
+        224,
+        224
+      ],
+      "DEVICE": "cuda",
+      "RUN_FOLDER": "/home/gmoreno/wildfire_paper_review/results_audit/common/artifacts/selftest/bed@active/",
+      "paths": {
+        "DFIRE_TRAIN_IMG_DIR": {
+          "value": "/home/gmoreno/uav/datasets/ds2fire/dfire_yolo/train/images/",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "DFIRE_TEST_IMG_DIR": {
+          "value": "/home/gmoreno/uav/datasets/ds2fire/dfire_yolo/test/images/",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "DFIRE_TEST_LABEL_DIR": {
+          "value": "/home/gmoreno/uav/datasets/ds2fire/dfire_yolo/test/labels/",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "FASDD_UAV_IMGS_DIR": {
+          "value": "/home/gmoreno/uav/datasets/fasdd/fasdd_uav/images/",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "FASDD_UAV_TEST_LABELS_FILE": {
+          "value": "/home/gmoreno/uav/datasets/fasdd/fasdd_uav/annotations/YOLO_UAV/test.txt",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "FASDD_CV_IMGS_DIR": {
+          "value": "/home/gmoreno/uav/datasets/fasdd/fasdd_cv/images/",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "FASDD_CV_TEST_LABELS_FILE": {
+          "value": "/home/gmoreno/uav/datasets/fasdd/fasdd_cv/annotations/YOLO_CV/test.txt",
+          "exists": true,
+          "under_uav_datasets": true
+        }
+      },
+      "val_subset_len": 192,
+      "batch": {
+        "x_shape": [
+          64,
+          3,
+          224,
+          224
+        ],
+        "x_min": 0.0,
+        "x_max": 1.0,
+        "y_shape": [
+          64,
+          2
+        ],
+        "y_unique": [
+          0.0,
+          1.0
+        ]
+      },
+      "modules_path": [
+        "/home/gmoreno/wildfire_paper_review/code/train/bed/modules"
+      ]
+    },
+    "bed@455f115": {
+      "family": "bed",
+      "code": "455f115",
+      "code_root": "/home/gmoreno/wildfire_paper_review/results_audit/common/artifacts/snapshots/455f115166e7/code/classifier_brevitas_2_finn",
+      "env": "pytorch_23",
+      "NUM_CLASSES": 2,
+      "IMG": [
+        230,
+        230
+      ],
+      "DEVICE": "cuda",
+      "RUN_FOLDER": "/home/gmoreno/wildfire_paper_review/results_audit/common/artifacts/selftest/bed@455f115/",
+      "paths": {
+        "DFIRE_TRAIN_IMG_DIR": {
+          "value": "/home/gmoreno/uav/datasets/ds2fire/dfire_yolo/train/images/",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "DFIRE_TEST_IMG_DIR": {
+          "value": "/home/gmoreno/uav/datasets/ds2fire/dfire_yolo/test/images/",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "DFIRE_TEST_LABEL_DIR": {
+          "value": "/home/gmoreno/uav/datasets/ds2fire/dfire_yolo/test/labels/",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "FASDD_UAV_IMGS_DIR": {
+          "value": "/home/gmoreno/uav/datasets/fasdd/fasdd_uav/images/",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "FASDD_UAV_TEST_LABELS_FILE": {
+          "value": "/home/gmoreno/uav/datasets/fasdd/fasdd_uav/annotations/YOLO_UAV/test.txt",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "FASDD_CV_IMGS_DIR": {
+          "value": "/home/gmoreno/uav/datasets/fasdd/fasdd_cv/images/",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "FASDD_CV_TEST_LABELS_FILE": {
+          "value": "/home/gmoreno/uav/datasets/fasdd/fasdd_cv/annotations/YOLO_CV/test.txt",
+          "exists": true,
+          "under_uav_datasets": true
+        }
+      },
+      "val_subset_len": 192,
+      "batch": {
+        "x_shape": [
+          128,
+          3,
+          230,
+          230
+        ],
+        "x_min": 0.0,
+        "x_max": 1.0,
+        "y_shape": [
+          128,
+          2
+        ],
+        "y_unique": [
+          0.0,
+          1.0
+        ]
+      },
+      "modules_path": [
+        "/home/gmoreno/wildfire_paper_review/results_audit/common/artifacts/snapshots/455f115166e7/code/classifier_brevitas_2_finn/modules"
+      ]
+    },
+    "transfer_learning@active": {
+      "error": "ModuleNotFoundError: No module named 'modules.dataset_dfire'",
+      "returncode": 1,
+      "stderr_tail": "Traceback (most recent call last):\n  File \"/opt/conda/envs/pytorch_23/lib/python3.10/runpy.py\", line 196, in _run_module_as_main\n    return _run_code(code, main_globals, None,\n  File \"/opt/conda/envs/pytorch_23/lib/python3.10/runpy.py\", line 86, in _run_code\n    exec(code, run_globals)\n  File \"/home/gmoreno/wildfire_paper_review/results_audit/common/selftest.py\", line 131, in <module>\n    main()\n  File \"/home/gmoreno/wildfire_paper_review/results_audit/common/selftest.py\", line 104, in main\n    print(json.dumps(run_family(args.family, args.rev), default=str))\n  File \"/home/gmoreno/wildfire_paper_review/results_audit/common/selftest.py\", line 87, in run_family\n    import modules.dataloaders as dataloaders  # noqa: E402  (original, unmodified module)\n  File \"/home/gmoreno/wildfire_paper_review/code/train/baseline_transfer_learning/modules/dataloaders.py\", line 2, in <module>\n    import modules.dataset_dfire as dataset_dfire\nModuleNotFoundError: No module named 'modules.dataset_dfire'\n"
+    },
+    "transfer_learning@455f115": {
+      "family": "transfer_learning",
+      "code": "455f115",
+      "code_root": "/home/gmoreno/wildfire_paper_review/results_audit/common/artifacts/snapshots/455f115166e7/code/classifier_transfer_learning",
+      "env": "pytorch_23",
+      "NUM_CLASSES": 2,
+      "IMG": [
+        224,
+        224
+      ],
+      "DEVICE": "cuda",
+      "RUN_FOLDER": "/home/gmoreno/wildfire_paper_review/results_audit/common/artifacts/selftest/transfer_learning@455f115/",
+      "paths": {
+        "DFIRE_TRAIN_IMG_DIR": {
+          "value": "/home/gmoreno/uav/datasets/ds2fire/dfire_yolo/train/images/",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "DFIRE_TEST_IMG_DIR": {
+          "value": "/home/gmoreno/uav/datasets/ds2fire/dfire_yolo/test/images/",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "DFIRE_TEST_LABEL_DIR": {
+          "value": "/home/gmoreno/uav/datasets/ds2fire/dfire_yolo/test/labels/",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "FASDD_UAV_IMGS_DIR": {
+          "value": "/home/gmoreno/uav/datasets/fasdd/fasdd_uav/images/",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "FASDD_UAV_TEST_LABELS_FILE": {
+          "value": "/home/gmoreno/uav/datasets/fasdd/fasdd_uav/annotations/YOLO_UAV/test.txt",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "FASDD_CV_IMGS_DIR": {
+          "value": "/home/gmoreno/uav/datasets/fasdd/fasdd_cv/images/",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "FASDD_CV_TEST_LABELS_FILE": {
+          "value": "/home/gmoreno/uav/datasets/fasdd/fasdd_cv/annotations/YOLO_CV/test.txt",
+          "exists": true,
+          "under_uav_datasets": true
+        }
+      },
+      "val_subset_len": 192,
+      "batch": {
+        "x_shape": [
+          64,
+          3,
+          224,
+          224
+        ],
+        "x_min": 0.0,
+        "x_max": 1.0,
+        "y_shape": [
+          64,
+          2
+        ],
+        "y_unique": [
+          0.0,
+          1.0
+        ]
+      },
+      "modules_path": [
+        "/home/gmoreno/wildfire_paper_review/results_audit/common/artifacts/snapshots/455f115166e7/code/classifier_transfer_learning/modules"
+      ]
+    },
+    "vision_transformer@active": {
+      "family": "vision_transformer",
+      "code": "active",
+      "code_root": "/home/gmoreno/wildfire_paper_review/code/train/baseline_vision_transformer",
+      "env": "pytorch_23",
+      "NUM_CLASSES": 2,
+      "IMG": [
+        224,
+        224
+      ],
+      "DEVICE": "cuda",
+      "RUN_FOLDER": "/home/gmoreno/wildfire_paper_review/results_audit/common/artifacts/selftest/vision_transformer@active/",
+      "paths": {
+        "DFIRE_TRAIN_IMG_DIR": {
+          "value": "/home/gmoreno/uav/datasets/ds2fire/dfire_yolo/train/images/",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "DFIRE_TEST_IMG_DIR": {
+          "value": "/home/gmoreno/uav/datasets/ds2fire/dfire_yolo/test/images/",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "DFIRE_TEST_LABEL_DIR": {
+          "value": "/home/gmoreno/uav/datasets/ds2fire/dfire_yolo/test/labels/",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "FASDD_UAV_IMGS_DIR": {
+          "value": "/home/gmoreno/uav/datasets/fasdd/fasdd_uav/images/",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "FASDD_UAV_TEST_LABELS_FILE": {
+          "value": "/home/gmoreno/uav/datasets/fasdd/fasdd_uav/annotations/YOLO_UAV/test.txt",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "FASDD_CV_IMGS_DIR": {
+          "value": "/home/gmoreno/uav/datasets/fasdd/fasdd_cv/images/",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "FASDD_CV_TEST_LABELS_FILE": {
+          "value": "/home/gmoreno/uav/datasets/fasdd/fasdd_cv/annotations/YOLO_CV/test.txt",
+          "exists": true,
+          "under_uav_datasets": true
+        }
+      },
+      "val_subset_len": 192,
+      "batch": {
+        "x_shape": [
+          64,
+          3,
+          224,
+          224
+        ],
+        "x_min": 0.0,
+        "x_max": 1.0,
+        "y_shape": [
+          64,
+          2
+        ],
+        "y_unique": [
+          0.0,
+          1.0
+        ]
+      },
+      "modules_path": [
+        "/home/gmoreno/wildfire_paper_review/code/train/baseline_vision_transformer/modules"
+      ]
+    },
+    "vision_transformer@455f115": {
+      "family": "vision_transformer",
+      "code": "455f115",
+      "code_root": "/home/gmoreno/wildfire_paper_review/results_audit/common/artifacts/snapshots/455f115166e7/code/classifier_vision_transformer",
+      "env": "pytorch_23",
+      "NUM_CLASSES": 2,
+      "IMG": [
+        224,
+        224
+      ],
+      "DEVICE": "cuda",
+      "RUN_FOLDER": "/home/gmoreno/wildfire_paper_review/results_audit/common/artifacts/selftest/vision_transformer@455f115/",
+      "paths": {
+        "DFIRE_TRAIN_IMG_DIR": {
+          "value": "/home/gmoreno/uav/datasets/ds2fire/dfire_yolo/train/images/",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "DFIRE_TEST_IMG_DIR": {
+          "value": "/home/gmoreno/uav/datasets/ds2fire/dfire_yolo/test/images/",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "DFIRE_TEST_LABEL_DIR": {
+          "value": "/home/gmoreno/uav/datasets/ds2fire/dfire_yolo/test/labels/",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "FASDD_UAV_IMGS_DIR": {
+          "value": "/home/gmoreno/uav/datasets/fasdd/fasdd_uav/images/",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "FASDD_UAV_TEST_LABELS_FILE": {
+          "value": "/home/gmoreno/uav/datasets/fasdd/fasdd_uav/annotations/YOLO_UAV/test.txt",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "FASDD_CV_IMGS_DIR": {
+          "value": "/home/gmoreno/uav/datasets/fasdd/fasdd_cv/images/",
+          "exists": true,
+          "under_uav_datasets": true
+        },
+        "FASDD_CV_TEST_LABELS_FILE": {
+          "value": "/home/gmoreno/uav/datasets/fasdd/fasdd_cv/annotations/YOLO_CV/test.txt",
+          "exists": true,
+          "under_uav_datasets": true
+        }
+      },
+      "val_subset_len": 192,
+      "batch": {
+        "x_shape": [
+          64,
+          3,
+          224,
+          224
+        ],
+        "x_min": 0.0,
+        "x_max": 1.0,
+        "y_shape": [
+          64,
+          2
+        ],
+        "y_unique": [
+          0.0,
+          1.0
+        ]
+      },
+      "modules_path": [
+        "/home/gmoreno/wildfire_paper_review/results_audit/common/artifacts/snapshots/455f115166e7/code/classifier_vision_transformer/modules"
+      ]
+    }
+  },
+  "snapshot_rev": "455f115166e7894d895ad3d8a07b078bf2494942",
+  "env": {
+    "timestamp": "2026-10-03T22:00:16+02:00",
+    "host": "nilo",
+    "argv": [
+      "/home/gmoreno/wildfire_paper_review/results_audit/common/selftest.py"
+    ],
+    "cwd": "/home/gmoreno/wildfire_paper_review/results_audit",
+    "python": "3.10.13",
+    "executable": "/opt/conda/envs/pytorch_23/bin/python",
+    "conda_env": "pytorch_23",
+    "platform": "Linux-5.15.0-139-generic-x86_64-with-glibc2.31",
+    "packages": {
+      "torch": "2.3.1",
+      "torchvision": "0.18.1",
+      "onnx": "1.16.1",
+      "albumentations": "1.4.10",
+      "torchmetrics": "1.4.0.post0",
+      "numpy": "1.26.4",
+      "opencv-python": "4.10.0",
+      "opencv-python-headless": "4.10.0.84",
+      "pillow": "10.3.0"
+    },
+    "git": {
+      "commit": "72fc5ce2728aa18f577bcd9f0be76401f575889f",
+      "branch": "main",
+      "dirty": true
+    },
+    "gpu_driver": "NVIDIA GeForce RTX 4070 Ti, 555.42.02, 12282 MiB",
+    "code_integrity": [
+      {
+        "family": "mobilenet",
+        "active_tree_sha256": "07b4ba76120e2941d855190b6a0b170c1e572ab2f2ff0952f1df17c623f50332",
+        "identical_to_uav": true,
+        "differ": [],
+        "missing_in_uav": []
+      },
+      {
+        "family": "bed",
+        "active_tree_sha256": "503b0c9d5f71c166e00a177bc2b9ab43f51ae544e7cd277eac86bbf24ffb2558",
+        "identical_to_uav": true,
+        "differ": [],
+        "missing_in_uav": []
+      },
+      {
+        "family": "transfer_learning",
+        "active_tree_sha256": "7bbec1464b337b90bfac30ef232ef831e50962d126544476b5748f5b8b2e3ca4",
+        "identical_to_uav": true,
+        "differ": [],
+        "missing_in_uav": []
+      },
+      {
+        "family": "vision_transformer",
+        "active_tree_sha256": "a55c2fc66a809effdad9a9acc6805a5938d41edca5f4db1fa029f8c0c27125b3",
+        "identical_to_uav": true,
+        "differ": [],
+        "missing_in_uav": []
+      }
+    ],
+    "torch_cuda": "12.1",
+    "cudnn": 8902,
+    "cuda_available": true,
+    "gpu": "NVIDIA GeForce RTX 4070 Ti"
+  }
+}
