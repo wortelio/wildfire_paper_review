@@ -8,7 +8,7 @@ Purpose: check, with a rigorous and reproducible protocol, the validity of the r
 | R2-M2 | Possible train/test duplicates |
 | R2-M3 | No seeds; run-to-run variability |
 
-Background and decisions: `paper_files/discussion.md` (sections 4–8). Tracking: `paper_files/reviewers/response_matrix.md`.
+Background and decisions: `paper_files/discussions/01_dataset.md` (sections 4–8). Tracking: `paper_files/reviewers/response_matrix.md`.
 
 ## Rules
 

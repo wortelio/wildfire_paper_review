@@ -1,15 +1,26 @@
-# Discusión entre Claude y Yo acerca de las decisiones/estrategias para superar la revisión
+# 01 — Dataset: validación, duplicados y semillas
 
-## Decisiones a lo largo de la investigación para comprender los motivos
+Comentarios de los revisores que trata este documento: R3-1 (test usado para la selección del modelo), R2-M2 (duplicados entre train y test) y R2-M3 (semillas y variabilidad).
 
-Este proyecto no comenzó como un trabajo de investigación, sino que tuvo una orientación más cercana a la elaboración de un producto de ingeniería. Por tanto, muchas decisiones no se tomaron siguiendo una metodología científica, sino con el objetivo de construir un producto.
+Problemas detectados por nosotros, no por los revisores. Su definición completa y su seguimiento están en `../reviewers/response_matrix.md`, sección "Author-identified issues":
 
-### Dataset
-Al comienzo de este trabajo solo estaba disponible el dataset DFire. Posteriormente, apareció FASDD y se incorporó. La realidad es que ambos datasets incorporan imágenes de internet y no hay traza de que imágenes que estén en entrenamiento de uno no estén en validación o test de otro, lo que falsearía los resultados, al utilizarse imágenes con las que se ha entrenado el modelo para verificarlo.
+| Código | Problema | Evidencia |
+|---|---|---|
+| A-3 | El `val.txt` oficial de FASDD se fusionó con el entrenamiento. La frase del paper "the original training and test assignments … are preserved" es inexacta | VERIFIED |
+| A-7 | La lista de augmentations de §II-A está incompleta: faltan HorizontalFlip, CLAHE, RGBShift y el escalado. El blur 17×17 se aplica a resolución completa, y un `try/except` cambia las transformaciones en silencio | VERIFIED |
+| A-8 | La búsqueda greedy de ratios de compresión de AIMET (BED) y la reconstrucción del channel pruning usaron 2048 imágenes de **test** | VERIFIED |
+| A-9 | Las métricas de test se calcularon con `drop_last=True`: sobre 24,320 de las 24,371 imágenes de la Tabla 1 | VERIFIED |
+| A-10 | Errata en la Tabla 1: en el test de FASDD CV, "Both" es 3358, no 3558 | VERIFIED |
+Explicación general del problema: `00_discussion.md` → "Dataset".
 
-No se hizo un conjunto separado de validación porque DFire no cuenta con ese conjunto, sino que solo tiene train y test.
+Contenido:
+1. Propuesta inicial de estrategias (usuario).
+2. Comentarios de Claude (2026-10-03, secciones 1–8), trasladados sin cambios desde `00_discussion.md`.
+3. **Plan detallado de detección de duplicados, evaluación de su impacto y estrategia de exclusión en test** (2026-10-04).
 
-#### Propuesta de estrategia
+---
+
+## Propuesta de estrategia
 Se me ocurren 3 estrategias posibles:
 1. Hacer un análisis de duplicados:
  - Qué resuelve? identifica si hay alguna imagen que contamine el conjunto de test.
@@ -24,11 +35,11 @@ Se me ocurren 3 estrategias posibles:
  - Se hace un análisis de duplicados
  - Se eliminan las imágenes duplicadas y se pasa a utilizar conjuntos de entrenamiento (DFire+FASDD), de validación (solo FASDD) y de test (DFire+FASDD)
 
-#### Claude comments
+## Claude comments
 
 *(2026-10-03. Las estimaciones de horas son INFERENCE basadas en la estructura del código y en tiempos históricos. Los tiempos de GPU salen de las fechas de los ficheros de los runs históricos: ≈12 h Nano FP32 (100 épocas), ≈10 h Nano QAT, ≈14 h BED-FPGA QAT (150 épocas), en la RTX 4070 Ti compartida. Ver `reviewers/response_matrix.md`, filas R3-1, R2-M2, R2-M3, A-3.)*
 
-##### 1. Separar los dos problemas: tienen soluciones distintas
+### 1. Separar los dos problemas: tienen soluciones distintas
 
 Las tres estrategias mezclan dos problemas independientes:
 
@@ -41,13 +52,13 @@ Hay además un tercer hecho relacionado: **el `val.txt` oficial de FASDD está f
 
 **Consecuencia clave: los duplicados (P2) se arreglan limpiando el test, no reentrenando.** Si hay imágenes de test con un duplicado en train, basta con quitarlas del test (o reportar test original y test limpio) y **re-evaluar los checkpoints existentes**. No hace falta reentrenar nada por P2. Lo que sí exige reentrenar es P1.
 
-##### 2. Respuestas a tus preguntas sobre la estrategia 1
+### 2. Respuestas a tus preguntas sobre la estrategia 1
 
 - **¿Habría que repetir muchos experimentos si hay duplicados?** No por los duplicados en sí, como acabo de explicar: es re-evaluación. El reentrenamiento lo exige P1.
 - **¿Es defendible no tener validación porque DFire no la tiene?** **No**, mientras el test se use para el scheduler y para elegir el checkpoint. Es práctica estándar separar un conjunto de validación del de entrenamiento cuando el dataset no lo trae, y los tres revisores lo saben. Solo sería defendible no tener validación con un protocolo sin ninguna selección: calendario fijo, sin scheduler dependiente de métricas y reportando la última época. No fue el caso.
 - Ahora mismo el paper dice "held-out evaluation loss". Un revisor lo lee como un conjunto de validación separado y no lo es. **En la respuesta hay que decirlo claramente**: intentar maquillarlo es el mayor riesgo reputacional de todo este punto.
 
-##### 3. Valoración de las estrategias propuestas
+### 3. Valoración de las estrategias propuestas
 
 Escala de impacto reputacional: ++ muy positivo / + positivo / 0 neutro / − negativo / −− muy negativo (riesgo alto de rechazo, o de dar imagen de poca rigurosidad).
 
@@ -59,7 +70,7 @@ Escala de impacto reputacional: ++ muy positivo / + positivo / 0 neutro / − ne
 | 3. Duplicados + train (DFire+FASDD) / val (solo FASDD oficial) / test | Sí | Sí | ≈ 45–60 h | 6–11 días | **+**: metodológicamente correcta y "oficial" para FASDD. Pero el entrenamiento pierde ~40k imágenes (−34 %) y la validación no contiene DFire. Los nuevos números dejan de ser comparables con los del paper, que es justo lo que queremos confirmar |
 | **4. Recomendada: estrategia 3 refinada** (ver §4) | Sí | Sí | ≈ 50–75 h | 6–11 días (núcleo) + 4–5 días (ampliación opcional) | **++**: "detectamos un problema de protocolo, lo corregimos y confirmamos los resultados con media ± desviación". Responde a la vez R3-1, R2-M2, R2-M3 y A-3 |
 
-##### 4. Propuesta: estrategia 3 refinada, por fases
+### 4. Propuesta: estrategia 3 refinada, por fases
 
 **F0 — Diagnóstico inmediato sin reentrenar** (útil para decidir cuánto invertir después).
 - Para cada run clave (Nano FP32 `test_v04`, Nano QAT `test_v05`, BED-FPGA QAT `71_…`, BED Simplified `11_…`, MobileNetV2 de referencia), comparar el F1 de test del checkpoint `best_mean_F1` (elegido con test) con el del checkpoint `last_*.pt` (última época, sin selección por F1). He comprobado que existen ambos.
@@ -108,7 +119,7 @@ En ambas variantes el **test no se toca** (salvo la limpieza de F1). Las listas 
 - Bitstream nuevo con los pesos reentrenados y el mismo folding: +3 h de puesta en marcha y 3–6 h de síntesis por diseño. Medida en placa: requiere el PYNQ-Z1.
 - Impacto: **+**. Evita la objeción de que el hardware usa un modelo distinto del que ahora se reporta.
 
-##### 5. Resumen de esfuerzo de la estrategia recomendada (F0–F3, más F4 sin bitstream)
+### 5. Resumen de esfuerzo de la estrategia recomendada (F0–F3, más F4 sin bitstream)
 
 | | Puesta en marcha (humano) | Ejecución (máquina, en segundo plano) |
 |---|---|---|
@@ -123,7 +134,7 @@ En ambas variantes el **test no se toca** (salvo la limpieza de F1). Las listas 
 
 Orden propuesto: F0 → F1 → F2 → lanzar F3 → mientras corre F3, avanzar con el resto de la revisión (Tabla 9, potencia, related work). Cada fase sirve para decidir si la siguiente merece la pena. Por ejemplo, si F0 y F1 muestran sesgos despreciables, la ampliación de F3 se puede omitir.
 
-##### 6. Lo que necesito que decidas
+### 6. Lo que necesito que decidas
 
 1. ¿V-A (validación oficial de FASDD) o V-B (validación separada por grupos del pool actual)? Yo recomiendo V-B.
 2. Presentación en el paper:
@@ -133,7 +144,7 @@ Orden propuesto: F0 → F1 → F2 → lanzar F3 → mientras corre F3, avanzar c
 3. ¿Está libre la GPU del servidor durante ~1–2 semanas? ¿Puedo lanzar dos entrenamientos en paralelo?
 4. ¿Empiezo por F0 (≈ medio día y sin riesgo), para tener datos reales antes de comprometer el resto?
 
-##### 7. Semillas: estado real y criticidad (añadido 2026-10-03, tras revisar el código)
+### 7. Semillas: estado real y criticidad (añadido 2026-10-03, tras revisar el código)
 
 **Estado real de la aleatoriedad** (VERIFIED en el código; el repo activo es idéntico al histórico):
 
@@ -182,7 +193,7 @@ Hay que corregir el texto de §II-A. Lo anoto como A-7 y A-8 en la matriz.
    - Impacto **+**. Sin el chequeo, la fuga hay que declararla como limitación: **−**.
 3. **Las semillas y el nuevo protocolo se resuelven en la misma campaña.** Cada run nuevo (validación separada y semilla fija s ∈ {0, 1, 2}) responde a la vez a R3-1 y R2-M3. No son dos campañas.
 
-##### 8. Estrategia inicial recomendada (revisada con lo anterior)
+### 8. Estrategia inicial recomendada (revisada con lo anterior)
 
 **Comprobaciones de viabilidad hechas hoy:**
 - Los entornos funcionan: driver 555 / CUDA 12.5, torch cu121 en `pytorch_brevitas`, `pytorch_23` y `pytorch_aimet`, con `cuda.is_available() = True` y la RTX 4070 Ti visible. El riesgo de CUDA que menciona el apartado *Legacy* no se materializa (VERIFIED).
@@ -221,4 +232,174 @@ Esto responde de una vez a la objeción más grave de R3 y a la petición explí
 
 **Siguiente paso propuesto:** empezar con F0 y la medida de la utilización de CPU y GPU en una época de prueba (≈ 1 día de trabajo, sin riesgo, en una copia de trabajo dentro del repo activo con salidas en `results/review_2026/`). Así sabremos cuánto sesgo hubo y cuánto dura realmente un run, antes de comprometer la campaña completa.
 
+---
 
+## Plan detallado: detección de duplicados, impacto y exclusión en test (2026-10-04)
+
+Responde a R2-M2. También prepara las particiones por grupos de F2 (R3-1). Se implementa en `results_audit/f1_duplicates/`. Reglas: `~/uav` es de solo lectura, los datasets no se modifican nunca y todo filtrado se hace con **listas de ficheros versionadas**.
+
+### P0. Datos de partida (VERIFIED, 2026-10-04)
+
+| Origen | Train (pool del paper) | Test | Disco | Observaciones |
+|---|---|---|---|---|
+| DFire | 17,221 | 4,306 | 3.0 GB | Prefijos: `WEB` (9443 / 2364), `AoF` (6723 / 1661), `PublicDataset` (1055 / 281). La numeración consecutiva de `AoF` sugiere **frames de vídeo** (HYPOTHESIS), el caso más probable de casi-duplicados entre train y test |
+| FASDD UAV | 20,916 (= train 12,550 + val 8,364) | 4,181 | 15 GB | Prefijos por clase (`bothFireAndSmoke_UAV…`). Imágenes de dron y de vigilancia de alta resolución |
+| FASDD CV | 79,430 (= train 47,660 + val 31,769) | 15,884 | 12 GB | Imágenes web y sintéticas, tal como describe el propio paper |
+| **Total** | **117,567** | **24,371** | ≈ 30 GB | — |
+
+- **Errata detectada en la Tabla 1 (VERIFIED):** el test de FASDD CV tiene **3358** imágenes "Both", no 3558. Con 3558 la fila suma 16,084 en lugar de 15,884, y la fila Total (Both 5556 = 895 + 1303 + 3358) solo cuadra con 3358. Se anota en `paper_comments.md`.
+- **Ventaja de partida:** para los dos modelos Nano ya existen las predicciones por imagen sobre las 24,371 imágenes de test (`results_audit/mobilenet_paper_replica/results/predictions__*.csv`). Para ellos, el impacto de los duplicados se calcula sin volver a ejecutar inferencia.
+
+### P1. Qué es un "duplicado": niveles y alcance
+
+Se definen cuatro niveles, de más a menos estricto. Se informa de cada uno por separado para que el revisor pueda juzgar:
+
+| Nivel | Definición | Ejemplos | Detector principal |
+|---|---|---|---|
+| **L0 Exacto** | Mismo fichero byte a byte | La misma imagen descargada dos veces | md5 / sha256 |
+| **L1 Mismo contenido** | Mismos píxeles tras decodificar, o tras el `Resize` a 224×224 que ve el modelo | Distinta compresión JPEG o metadatos; distinta resolución original | Hash de los píxeles a 224×224 |
+| **L2 Casi-duplicado** | La misma foto editada | Recompresión fuerte, recorte pequeño, marca de agua, cambio de color o brillo, volteo | Hash perceptual (pHash/dHash, también sobre la imagen volteada) + descriptor de copy detection |
+| **L3 Mismo evento / casi la misma escena** | Distinta foto o frame de la misma escena con cambios pequeños | Frames consecutivos de un vídeo (DFire `AoF`), ráfagas de dron | Embedding semántico + SSIM, con umbral calibrado a mano |
+
+Fuera de alcance, por no ser duplicado: escenas *parecidas* de eventos distintos (otro incendio, otro bosque).
+
+Comparaciones, por orden de importancia:
+1. **Test ↔ pool de entrenamiento.** Es la que determina la contaminación del test.
+2. **Entre datasets** (DFire ↔ FASDD UAV ↔ FASDD CV), en las cuatro combinaciones de split.
+3. **Dentro del pool de entrenamiento.** Sirve para que en F2 la validación se forme por grupos.
+4. **Dentro del test.** No es fuga, pero sobrepondera algunas escenas y se informa como estadística.
+
+### P2. Pipeline de detección (scripts en `results_audit/f1_duplicates/`)
+
+**S0 — Inventario (manifest).**
+- Se construye la lista exacta de imágenes que usan los dataloaders del paper, reutilizando las clases `DFireDataset` y `FASDDDataset` de la réplica. Así se aplica el mismo filtrado ("Removed wrong images") y el mismo orden.
+- Por imagen: id, ruta relativa, origen, split original (DFire train/test; FASDD train/val/test), split del paper (pool / test), etiquetas smoke/fire, resolución, tamaño, md5 y posición en el loader de test (para cruzar con los CSV de predicciones).
+- Salida: `artifacts/manifest.parquet` (no versionado) y un resumen versionado en `results/`. Comprobación: los recuentos coinciden con la Tabla 1 corregida.
+- Puesta en marcha 2–3 h; ejecución 20–40 min (lectura de ~30 GB).
+
+**S1 — L0 y L1.**
+- Se agrupa por md5 (L0).
+- Se decodifica cada imagen, se aplica `cv2.resize` a 224×224 como en `get_val_loader()` y se calcula el hash del array resultante (L1, igualdad exacta).
+- Ejecución 30–60 min (decodificación de 142k imágenes a resolución completa con 16 procesos).
+
+**S2 — Hashes perceptuales (L2 "barato").**
+- pHash y dHash de 64 bits sobre la imagen original y sobre la volteada horizontalmente, porque el entrenamiento usa `HorizontalFlip`.
+- Candidatos con distancia de Hamming ≤ 12, buscados con un índice multi-índice o un BK-tree.
+- Sin GPU; se puede ejecutar en la misma pasada que S1.
+
+**S3 — Embeddings (L2 robusto y L3).**
+- **Descriptor de copy detection: SSCD** (Pizzi et al., CVPR 2022, entrenado específicamente para detectar copias editadas). Cubre L2 con recortes y ediciones que el pHash no detecta.
+- **Descriptor semántico: DINOv2 ViT-S/14.** Cubre L3 (frames consecutivos, misma escena).
+- Ambos sobre imágenes a 224 normalizadas en L2; búsqueda exacta de los k = 10 vecinos por producto interno en GPU.
+  - test ↔ pool: 24k × 118k;
+  - pool ↔ pool: por bloques, para la agrupación de F2.
+- Ejecución: 1–2 h de GPU, limitada otra vez por la decodificación.
+- **Requiere decisión (D-F1a):** un entorno conda nuevo, `dedup_audit` (torch, faiss, imagehash, scikit-image), y descargar de internet los pesos de SSCD y DINOv2. No se toca ningún entorno existente.
+
+**S4 — Verificación de candidatos.**
+- A cada pareja candidata de S2/S3 se le calculan SSIM y MSE a 224, la similitud de cada descriptor y la relación de las etiquetas (iguales o distintas).
+
+**S5 — Calibración de umbrales con revisión humana (punto de supervisión).**
+- Se genera una página HTML de pares lado a lado: una muestra estratificada por bin de similitud, unos 20 pares por bin en ~10 bins, por descriptor, en total 200–300 pares.
+- Etiquetas: *duplicado L1/L2*, *misma escena L3*, *distinto*.
+- Con ellas se estima la precisión por bin y se fijan los umbrales:
+  - **L2:** alta precisión (≥ 95 % de pares realmente duplicados);
+  - **L3:** se informa de la curva completa y se fija un umbral "conservador" (alta cobertura), más otro "estricto".
+- Se registra un ejemplo de cada caso límite.
+- **Supervisión humana: 2–3 h.**
+
+**S6 — Agrupación.**
+- Se construye el grafo de imágenes conectadas por aristas L0–L2 (y, por separado, L0–L3) y se obtienen los clústeres de duplicados con union-find.
+- Por clúster: tamaño, orígenes, splits y etiquetas.
+- **Clústeres con etiquetas contradictorias** (la misma imagen con etiquetas distintas): se informa del ruido de etiquetado. Es un hallazgo útil en sí mismo y se reporta por separado.
+
+**S7 — Informe de contaminación** (`results/contamination_report.md` + JSON):
+- % del test con al menos un duplicado en el pool, por nivel (L0, L1, L2, L3-estricto, L3-conservador), por origen del test, por combinación de etiquetas y por par de orígenes (p. ej. test DFire ↔ train FASDD CV);
+- duplicados entre datasets distintos (DFire ↔ FASDD);
+- duplicados dentro del test;
+- una figura con ejemplos.
+
+### P3. Evaluación del impacto (sin reentrenar)
+
+**Reglas de decisión fijadas antes de ver los resultados**, para que el análisis no se ajuste a posteriori:
+- **R-a. Impacto despreciable:** contaminación (L0–L2) < 1 % del test y |ΔF1-Macro| ≤ 0.2 pp en todos los modelos del paper. Las tablas se mantienen y se añaden una frase y una tabla de robustez con el test limpio.
+- **R-b. Impacto relevante:** contaminación ≥ 1 % o |ΔF1-Macro| > 0.2 pp en algún modelo. **Todas las tablas pasan al test limpio** y el test original se da solo como referencia.
+- **R-c.** Si en el test limpio cambia el orden de algún par de modelos o configuraciones que el paper usa para una conclusión, esa conclusión se reformula.
+
+Pasos:
+1. **I1 — Re-evaluación en tres subconjuntos:**
+   - (a) test completo (24,371);
+   - (b) **test limpio** = test sin las imágenes contaminadas, para cada nivel;
+   - (c) solo las imágenes contaminadas.
+
+   Métricas: P/R/F1 por clase y F1-Macro.
+   - Nano FP32 y Nano QAT: directamente desde los CSV de predicciones (minutos).
+   - Resto de modelos de las Tablas 2, 3, 5 y 10: inferencia sobre el test completo una sola vez por checkpoint (≈ 4–8 min cada uno; unos 15 checkpoints ≈ 1.5–2 h), guardando predicciones por imagen. Antes hay que replicar cada modelo como se hizo con el Nano.
+2. **I2 — Control por composición.** Quitar imágenes cambia por sí solo el reparto de clases y la dificultad del test. Por eso se compara el Δ real con el Δ obtenido al quitar 1000 subconjuntos **aleatorios del mismo tamaño y con la misma distribución de origen y etiquetas**. El efecto de la contaminación es la diferencia con esa distribución nula; se da el p-valor empírico.
+3. **I3 — Señal de memorización.**
+   - Se compara la tasa de error en imágenes contaminadas y en no contaminadas, dentro de los mismos estratos de origen y etiqueta (test de permutación o de Fisher estratificado).
+   - Si el modelo acierta claramente más en las contaminadas, hay evidencia de que la fuga infla las cifras. Si no, es una evidencia fuerte de que no hay impacto.
+   - También se compara la confianza media (probabilidad sigmoide) en ambos grupos.
+4. **I4 — Intervalos de confianza.** Bootstrap pareado (2000 réplicas) del F1-Macro en el test completo y en el limpio, y de la diferencia entre modelos (p. ej. FP32 − QAT) en ambos. Esto ayuda además con R2-M3: muestra qué diferencias del paper superan el ruido de muestreo del test.
+5. **I5 — Hardware.**
+   - La columna FPGA de la Tabla 7 (94.38 / 95.32) no se puede recalcular sobre el test limpio mientras no se sepa cómo se obtuvo (R3-2, UNKNOWN).
+   - Si se recuperan las predicciones por imagen de la FPGA, o se reproduce con simulación funcional QONNX/FINN, se aplica el mismo análisis.
+   - Si no, se argumenta con la concordancia entre software y FPGA medida sobre el test completo.
+
+### P4. Estrategia de manejo de duplicados: que no se usen en la evaluación
+
+1. **E1 — Test limpio canónico.**
+   - Se versionan `results_audit/f1_duplicates/results/splits/test_clean.txt` (rutas relativas) y `test_contaminated.csv` (ruta, nivel, motivo, imagen del pool con la que coincide y similitud).
+   - Criterio por defecto (propuesta): quitar del test toda imagen de un clúster L0–L2 que incluya alguna imagen del pool, más las L3 por encima del **umbral estricto** calibrado en S5.
+   - Las L3 entre el umbral estricto y el conservador se informan como análisis de sensibilidad.
+2. **E2 — Filtrado en el dataloader.**
+   - Copia del `dataloaders.py` de la réplica (copy-on-write, con el diff documentado) que acepta una lista de ficheros permitidos y comprueba con `assert` los recuentos esperados.
+   - El dataset en disco no se toca.
+   - Se elimina también `drop_last` en evaluación (A-9).
+3. **E3 — Modelos históricos (los del paper).** Se evalúan sobre el test limpio sin reentrenar (P3). Es la única opción que conserva los pesos y los diseños FPGA desplegados.
+4. **E4 — Modelos nuevos (F3, protocolo riguroso).**
+   - **Se limpia también el entrenamiento:** de la lista de entrenamiento se quitan los miembros del pool de los clústeres que tocan el test.
+   - La validación de F2 se forma **por clústeres** (cada clúster cae entero en train o en val).
+   - Así, los modelos nuevos se pueden evaluar sobre el test completo y sobre el limpio sin ninguna fuga posible, y la comparación con los históricos es directa.
+5. **E5 — Duplicados dentro del test.** No se eliminan del test principal. Se informa de cuántos hay y, como análisis secundario, se da el F1 con un representante por clúster.
+6. **E6 — Paper y respuesta.**
+   - Tabla 1 corregida (errata 3558 → 3358) con las columnas de contaminación.
+   - Un párrafo en §II-A sobre el método de detección y el resultado.
+   - Cifras en el test limpio según R-a / R-b.
+   - Respuesta a R2-M2 y a R3-1 con los números.
+   - Las listas `test_clean.txt` y de particiones se publican en el material de reproducción, lo que también mejora el Data Availability Statement.
+
+### P5. Esfuerzo, cómputo y supervisión
+
+| Paso | Puesta en marcha (Claude) | Ejecución (máquina) | Supervisión humana |
+|---|---|---|---|
+| Entorno `dedup_audit` + descarga de pesos SSCD/DINOv2 | 1–2 h | 15 min | **Sí: aprobar (D-F1a)** |
+| S0 inventario | 2–3 h | 20–40 min | No |
+| S1 + S2 hashes | 2–3 h | 30–60 min | No |
+| S3 embeddings + kNN | 3–4 h | 1–2 h GPU | No |
+| S4 verificación | 1–2 h | 15–30 min | No |
+| S5 calibración (página de revisión) | 2 h | — | **Sí: 2–3 h de revisión de pares** |
+| S6 + S7 clústeres e informe | 2–3 h | minutos | Revisar el informe (30 min) |
+| P3 Nano (desde los CSV), I1–I4 | 3–4 h | minutos | **Sí: aplicar las reglas R-a/R-b** |
+| P3 resto de modelos (replicar e inferir unos 15 checkpoints) | 6–10 h (depende de la procedencia de BED y de las referencias) | 1.5–2 h | Confirmar los runs de cada tabla |
+| P4 E1–E2 (listas y dataloader filtrado) | 2–3 h | — | No |
+| **Total** | **≈ 25–35 h** | **≈ 4–7 h** | **≈ 4–6 h** |
+
+Orden: S0 → S1/S2 → S3 → S4 → **S5 (revisión humana)** → S6/S7 → P3 (Nano primero; es inmediato) → decisión R-a/R-b → P4 → resto de modelos.
+
+Tras S1/S2 ya se tienen L0–L2 baratos. Si la contaminación exacta ya fuera alta, se informaría antes de seguir.
+
+### P6. Riesgos y limitaciones
+
+- **Recall imperfecto.** Ningún detector encuentra todos los casi-duplicados. Por eso se combinan tres familias de detectores y se informa de la sensibilidad a los umbrales. En la respuesta se dirá "hasta el nivel de detección descrito", no "sin duplicados".
+- **L3 subjetivo.** La frontera entre "misma escena" y "escena parecida" depende del criterio. Se resuelve con la revisión humana documentada (S5) y reportando dos umbrales.
+- **Contaminación propia de los datasets.** Si FASDD o DFire ya traen duplicados entre sus propios splits oficiales, no es un error nuestro, pero afecta igual a las cifras. Se informa por origen.
+- **Ruido de etiquetas.** Los clústeres con etiquetas contradictorias pueden revelar errores de anotación en los datasets originales. Se informa sin corregir etiquetas, porque corregirlas cambiaría el benchmark.
+- **Pesos externos.** SSCD y DINOv2 requieren descarga. Si no hay acceso a internet desde el servidor, se usarían pHash + SSIM + un ResNet de torchvision ya en caché, con menor recall en L2/L3.
+
+### P7. Decisiones pendientes
+
+- **D-F1a:** ¿crear el entorno `dedup_audit` y descargar los pesos de SSCD y DINOv2?
+- **D-F1b:** ¿aceptas las reglas de decisión R-a/R-b/R-c (umbrales de 1 % de contaminación y 0.2 pp) antes de ver los datos?
+- **D-F1c:** criterio por defecto del test limpio: L0–L2 + L3 estricto (propuesto), o solo L0–L2.
+- **D-F1d:** ¿se limpia también el entrenamiento en F3 (E4)? Lo recomiendo.

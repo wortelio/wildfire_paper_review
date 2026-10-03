@@ -1,6 +1,6 @@
 # F0 — Selection bias and sanity gate
 
-Not started. See `../README.md` and `paper_files/discussion.md` §4 (F0) and §8.
+Not started. See `../README.md` and `paper_files/discussions/01_dataset.md` §4 (F0) and §8.
 
 Planned tasks (T2–T5):
 - T2: run specs for the paper runs.

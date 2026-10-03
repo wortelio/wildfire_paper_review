@@ -13,6 +13,7 @@ Evidence levels: VERIFIED / STRONG EVIDENCE / INFERENCE / HYPOTHESIS / UNKNOWN.
 | 4 | Figure 9a legend (p. 13) | Legend reads "MobileNetV Nano" | VERIFIED | Open |
 | 5 | Figure 9b (p. 13) vs. text / Table 9 | The PYNQ-Z1 power bar seems inconsistent with 144 mW | HYPOTHESIS | Open — needs check |
 | 6 | References [13] and [29] (p. 14) | Conference years look wrong | [29]: VERIFIED inconsistency; [13]: INFERENCE | Open — needs check |
+| 7 | Table 1, row FASDD CV, Test "Both" (p. 4) | 3558 should be 3358 (the row does not sum) | VERIFIED | Open |
 
 ---
 
@@ -62,3 +63,14 @@ Evidence levels: VERIFIED / STRONG EVIDENCE / INFERENCE / HYPOTHESIS / UNKNOWN.
 - **[13]** M. Sandler et al., "MobileNetV2: Inverted Residuals and Linear Bottlenecks," *The IEEE Conference on Computer Vision and Pattern Recognition (CVPR)*, **2019**, pp. 4510–4520.
   - **Observation (INFERENCE, not checked against the bibliographic record):** MobileNetV2 was published at CVPR 2018, so the year 2019 looks wrong.
 - **Action required:** check both entries against the official records (CVF Open Access / IEEE Xplore) and fix the BibTeX.
+
+## 7. Table 1 — FASDD CV test "Both" count
+
+- **Location:** Table 1 "DFire and FASDD datasets." (p. 4), row FASDD CV, Test column "Both".
+- **As printed:** 3558. The row then sums to 6533 + 3902 + 2091 + 3558 = 16,084, but the printed Total is 15,884.
+- **Evidence (VERIFIED 2026-10-04):**
+  - `~/uav/datasets/fasdd/fasdd_cv/annotations/YOLO_CV/test.txt` lists 3358 `bothFireAndSmoke_CV*` images, and 6533 + 3902 + 2091 + 3358 = 15,884;
+  - the Test "Total" row (Both 5556 = 895 + 1303 + 3358) is only consistent with 3358;
+  - all other rows of Table 1 sum correctly.
+- **Proposed fix:** 3558 → 3358.
+

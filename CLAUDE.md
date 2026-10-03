@@ -92,7 +92,7 @@ reviewer comment
 
 ## Discussion
 
-The file `~/wildfire_paper_review/paper_files/discussion.md` will contain information about the paper problems detected by the reviewers and it will be used to discuss the solutions between Claude and Me.
+The folder `~/wildfire_paper_review/paper_files/discussions/` (`00_discussion.md` general overview; one numbered file per topic, e.g. `01_dataset.md`) will contain information about the paper problems detected by the reviewers and it will be used to discuss the solutions between Claude and Me.
 
 
 ## Experimental evidence
