@@ -10,3 +10,4 @@ results_audit/**/*.npz
 __pycache__/
 *.pyc
 results_audit/**/outputs/
+results_audit/**/predictions__*.csv

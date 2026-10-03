@@ -1,0 +1,173 @@
+{
+  "timestamp": "2026-10-04T00:19:59+02:00",
+  "replica_model": "fp32",
+  "paper_result": "Table 5 (MobileNetV2 Nano, 95.93 %), Table 7 FP32, Table 8 FP32",
+  "historical_run": "/home/gmoreno/uav/code/classifier_my_mobilenetv2/experiments/test_v04_mini_resnet_70k_full_ds/",
+  "checkpoint": "weights/MY_MBLNET_V2_classifier__best_mean_F1.pt",
+  "checkpoint_original": "/home/gmoreno/uav/code/classifier_my_mobilenetv2/experiments/test_v04_mini_resnet_70k_full_ds/weights/MY_MBLNET_V2_classifier__best_mean_F1.pt",
+  "checkpoint_sha256": "c8385799d1771c5e9f055d9a9c19f66f7bb3606b2d2cbf655723b1733ad607f6",
+  "checkpoint_epoch": 86,
+  "n_params": 68882,
+  "model_class": "modules.model_mobilenetv2_mini_Resnet.MobileNetV2_MINI_RESNET",
+  "n_test_full": 24371,
+  "n_test_paper_protocol": 24320,
+  "A_training_protocol": {
+    "losses": {
+      "Total": 11.067497104876919,
+      "Smoke": 7.073812316828652,
+      "Fire": 3.9936847869698937
+    },
+    "logged_losses": {
+      "Total": 11.0675,
+      "Smoke": 7.07,
+      "Fire": 3.99
+    },
+    "metrics": {
+      "Accuracy": [
+        0.9546052813529968,
+        0.9782483577728271
+      ],
+      "Precision": [
+        0.9565523862838745,
+        0.9523926973342896
+      ],
+      "Recall": [
+        0.9467073678970337,
+        0.9819888472557068
+      ],
+      "F1": [
+        0.951604425907135,
+        0.9669643640518188
+      ]
+    },
+    "max_abs_diff_vs_log": 0.0
+  },
+  "B_full_test": {
+    "smoke": {
+      "TP": 10876,
+      "FP": 494,
+      "TN": 12387,
+      "FN": 614,
+      "N": 24371,
+      "Accuracy": 0.9545361290057855,
+      "Precision": 0.9565523306948109,
+      "Recall": 0.9465622280243691,
+      "F1": 0.9515310586176728
+    },
+    "fire": {
+      "TP": 7760,
+      "FP": 387,
+      "TN": 16082,
+      "FN": 142,
+      "N": 24371,
+      "Accuracy": 0.9782938738664807,
+      "Precision": 0.9524978519700503,
+      "Recall": 0.9820298658567451,
+      "F1": 0.9670384447629136
+    },
+    "F1_macro": 0.9592847516902931
+  },
+  "B_paper_subset": {
+    "smoke": {
+      "TP": 10854,
+      "FP": 493,
+      "TN": 12362,
+      "FN": 611,
+      "N": 24320,
+      "Accuracy": 0.9546052631578947,
+      "Precision": 0.956552392702917,
+      "Recall": 0.9467073702573049,
+      "F1": 0.9516044187269859
+    },
+    "fire": {
+      "TP": 7742,
+      "FP": 387,
+      "TN": 16049,
+      "FN": 142,
+      "N": 24320,
+      "Accuracy": 0.9782483552631579,
+      "Precision": 0.9523926682248739,
+      "Recall": 0.9819888381532217,
+      "F1": 0.9669643414725536
+    },
+    "F1_macro": 0.9592843800997697
+  },
+  "max_abs_diff_B_subset_vs_A": 2.9109415655703685e-08,
+  "comparison_with_paper": [
+    {
+      "class": "smoke",
+      "metric": "Precision",
+      "paper_%": 95.66,
+      "replica_A_%": 95.66,
+      "replica_full_test_%": 95.66,
+      "A_matches_paper": true
+    },
+    {
+      "class": "smoke",
+      "metric": "Recall",
+      "paper_%": 94.67,
+      "replica_A_%": 94.67,
+      "replica_full_test_%": 94.66,
+      "A_matches_paper": true
+    },
+    {
+      "class": "smoke",
+      "metric": "F1",
+      "paper_%": 95.16,
+      "replica_A_%": 95.16,
+      "replica_full_test_%": 95.15,
+      "A_matches_paper": true
+    },
+    {
+      "class": "fire",
+      "metric": "Precision",
+      "paper_%": 95.24,
+      "replica_A_%": 95.24,
+      "replica_full_test_%": 95.25,
+      "A_matches_paper": true
+    },
+    {
+      "class": "fire",
+      "metric": "Recall",
+      "paper_%": 98.2,
+      "replica_A_%": 98.2,
+      "replica_full_test_%": 98.2,
+      "A_matches_paper": true
+    },
+    {
+      "class": "fire",
+      "metric": "F1",
+      "paper_%": 96.7,
+      "replica_A_%": 96.7,
+      "replica_full_test_%": 96.7,
+      "A_matches_paper": true
+    },
+    {
+      "class": "macro",
+      "metric": "F1",
+      "paper_%": 95.93,
+      "replica_A_%": 95.93,
+      "replica_full_test_%": 95.93,
+      "A_matches_paper": true
+    }
+  ],
+  "env": {
+    "conda_env": "pytorch_23",
+    "python": "3.10.13",
+    "executable": "/opt/conda/envs/pytorch_23/bin/python",
+    "packages": {
+      "torch": "2.3.1",
+      "torchvision": "0.18.1",
+      "albumentations": "1.4.10",
+      "torchmetrics": "1.4.0.post0",
+      "numpy": "1.26.4",
+      "opencv-python": "4.10.0"
+    },
+    "cuda": "12.1",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti"
+  },
+  "git": {
+    "commit": "83bfab7cc58295fc2e608ca032728239cf34753b",
+    "dirty": true
+  }
+}

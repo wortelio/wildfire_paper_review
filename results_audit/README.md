@@ -32,7 +32,7 @@ results_audit/
 │   ├── env_capture.py     # provenance record for every result
 │   ├── snapshot.py        # historical code at a ~/uav git revision (paper era: 455f115)
 │   └── run_specs/         # one spec per historical run used in the paper
-├── mobilenet_paper_replica/  # self-contained replica of MobileNetV2 Nano FP32 (paper Tables 5, 8): config + modules + validate_paper_metrics.ipynb
+├── mobilenet_paper_replica/  # self-contained replica of MobileNetV2 Nano FP32 + Brevitas QAT (paper Tables 5, 7, 8)
 ├── f0_selection_bias/     # F0: re-evaluate historical checkpoints (sanity gate + best-vs-last bias) and timing
 ├── f1_duplicates/         # F1: exact / perceptual / embedding near-duplicate analysis (train <-> test)
 ├── f2_splits/             # F2: group-aware train/val split; versioned file lists
@@ -46,6 +46,6 @@ results_audit/
 |---|---|
 | T0 structure | Done |
 | T1 common infrastructure | Done (see `common/README.md`: the active code copy is not usable as-is; paper-era snapshot `455f115` is used) |
-| mobilenet_paper_replica | Prepared (model = test_v04 epoch 86, VERIFIED); evaluation pending |
+| mobilenet_paper_replica | Done: MobileNetV2 Nano FP32 and Brevitas QAT (Tables 5, 7, 8) reproduced exactly (VERIFIED, max abs diff = 0 vs logs) |
 | F0 | Pending |
 | F1, F2, F-AIMET, F3 | Not started; scope decided after F0 |
