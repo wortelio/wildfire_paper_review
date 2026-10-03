@@ -1,2 +1,11 @@
 # Paper pdf
 *.pdf
+# results_audit: large, non-versioned outputs
+results_audit/**/artifacts/
+results_audit/**/*.pt
+results_audit/**/*.pth
+results_audit/**/*.onnx
+results_audit/**/*.npy
+results_audit/**/*.npz
+__pycache__/
+*.pyc
