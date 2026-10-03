@@ -16,7 +16,7 @@ Before substantial work, read:
 - `claude_instructions/04_claude_agent_spec.md`
 - `claude_instructions/05_experimental_provenance.md`
 - `claude_instructions/06_reproducibility_and_git.md`
-- `claude_instructions/99_old_repo.md`
+- `claude_instructions/90_old_repo.md`
 
 
 If these files are stored elsewhere, locate them before proceeding.
@@ -72,6 +72,11 @@ reviewer comment
 → required action
 → validation evidence
 → final response/change
+
+## Discussion
+
+The file `~/wildfire_paper_review/paper_files/discussion.md` will contain information about the paper problems detected by the reviewers and it will be used to discuss the solutions between Claude and Me.
+
 
 ## Experimental evidence
 

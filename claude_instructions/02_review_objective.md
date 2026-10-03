@@ -6,16 +6,20 @@ Claude debe ayudar a corregir de manera sistemática todos los defectos, dudas, 
 
 El objetivo no es simplemente "mejorar el código", sino producir una revisión científicamente defendible y trazable del trabajo.
 
+Los comentarios de los revisores están en el email paper_review_email.md.
+
 ## Los comentarios de los revisores son requisitos de trabajo
 
 Los informes de revisión deben incorporarse al repositorio, preferiblemente en un formato textual como:
 
-```text
-reviewers/
+```paper_files/reviewers/
 ├── reviewer_1.md
 ├── reviewer_2.md
+├── reviewer_3.md
 └── response_matrix.md
 ```
+
+Para incorporarlos, lee todos el email de paper_review_email.md, localiza los comentarios que pertenecen a cada revisor y trasládalos a su correspondiente reviewer_<num>.md.
 
 No reinterpretar silenciosamente una petición del reviewer.
 
@@ -54,9 +58,9 @@ Cada observación puede requerir una o varias de estas acciones:
 - nueva síntesis FPGA;
 - nueva medición de recursos, rendimiento, latencia o throughput.
 
-## No cambiar resultados para hacerlos encajar
+## No cambiar resultados
 
-Nunca modificar código, tablas o texto con el objetivo de hacer que un experimento "coincida" con el paper sin evidencia.
+Nunca modificar código por el momento.
 
 Si existe una discrepancia:
 
@@ -65,7 +69,7 @@ Si existe una discrepancia:
 3. buscar el experimento histórico;
 4. inspeccionar Git;
 5. identificar la causa probable;
-6. proponer cómo resolverla.
+6. proponer cómo resolverla a alto nivel. Esta sección la utilizaremos en el futuro para discutir las estrategias para resolver las objeciones declaradas por los revisores.
 
 Distinguir siempre entre:
 
@@ -100,8 +104,6 @@ Antes de realizar cambios extensos:
 3. localizar el código pertinente;
 4. comprobar la procedencia de los resultados afectados;
 5. proponer la mínima intervención necesaria;
-6. ejecutar;
-7. validar;
-8. documentar.
+6. hacer una estimación del tiempo que habría que invertir para resolver la objeción con garantías.
 
-La prioridad es una revisión científicamente sólida, no maximizar la cantidad de cambios.
+La prioridad es una revisión científicamente sólida.
