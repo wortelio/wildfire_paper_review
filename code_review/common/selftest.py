@@ -1,6 +1,6 @@
 """Self-test of the audit infrastructure (task T1).
 
-Run from the repository root with each conda environment to be used:
+Run from code_review/ (the folder that contains common/) with each conda environment to be used:
     /opt/conda/envs/pytorch_brevitas/bin/python -m common.selftest
     /opt/conda/envs/pytorch_23/bin/python -m common.selftest
 
@@ -110,7 +110,7 @@ def main():
     for fam in families:
         for rev in (None, snapshot.PAPER_ERA_REV):
             cmd = [sys.executable, '-m', 'common.selftest', '--family', fam] + (['--rev', rev] if rev else [])
-            p = subprocess.run(cmd, cwd=paths.REPO_ROOT, capture_output=True, text=True)
+            p = subprocess.run(cmd, cwd=paths.CODE_REVIEW_DIR, capture_output=True, text=True)
             last = p.stdout.strip().splitlines()[-1] if p.stdout.strip() else ''
             key = f'{fam}@{rev or "active"}'
             try:

@@ -22,7 +22,7 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-sys.path.insert(0, str(HERE.parents[1]))          # repository root
+sys.path.insert(0, str(next(p for p in HERE.parents if (p / 'common' / '__init__.py').exists())))   # code_review/
 from common import paths, write_guard  # noqa: E402
 
 UAV_CODE = paths.UAV_CODE

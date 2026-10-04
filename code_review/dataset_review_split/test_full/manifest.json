@@ -22,5 +22,5 @@
       "sha256": "f450cfd6ca3bb045bb23976c83da99666f4693216ea652b0681f940a15e69ac2"
     }
   ],
-  "generated_by": "02_audit/f0_selection_bias/eval_checkpoints.py"
+  "generated_by": "code_review/train/02_audit/f0_selection_bias/eval_checkpoints.py"
 }

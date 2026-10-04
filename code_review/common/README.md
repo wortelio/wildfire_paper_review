@@ -1,10 +1,10 @@
-# Common infrastructure (T1)
+# code_review/common — shared infrastructure (used by train/ and finn/)
 
-Scripts run with their own folder as working directory and find the repository root from their own path. Use the conda environment of the historical run:
+Scripts run with their own folder as working directory and locate `code_review/` from their own path. Use the conda environment of the historical run:
 - scripts: `cd <experiment folder> && /opt/conda/envs/<env>/bin/python <script>.py`;
-- the self-test: `cd <repo root> && /opt/conda/envs/<env>/bin/python -m common.selftest`.
+- the self-test: `cd code_review && /opt/conda/envs/<env>/bin/python -m common.selftest`.
 
-Numbered folders (`01_replicas`, `02_audit`, `03_revision`) are not Python packages. Scripts in them add the repository root to `sys.path` and import `common`. Replicas are loaded with `common.replicas.use()`.
+Numbered folders (`train/01_replicas`, `train/02_audit`, `train/03_revision`) are not Python packages. Scripts in them find `code_review/` by looking upwards for the first folder that contains `common/__init__.py`, add it to `sys.path` and import `common`. `paths.py` derives every location from its own position and from the repository's `.git`, so nothing depends on the working directory or on fixed parent levels. Replicas are loaded with `common.replicas.use()`.
 
 | Module | Purpose |
 |---|---|

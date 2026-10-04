@@ -21,7 +21,7 @@ import time
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-sys.path.insert(0, str(HERE.parents[1]))
+sys.path.insert(0, str(next(p for p in HERE.parents if (p / 'common' / '__init__.py').exists())))   # code_review/
 from common import env_capture, paths, replicas  # noqa: E402
 
 TRAIN_IMAGES = 117567     # Table 1 training pool (DFire train + FASDD UAV/CV train + val)

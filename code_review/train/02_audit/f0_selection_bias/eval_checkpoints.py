@@ -25,8 +25,7 @@ import time
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-REPO = HERE.parents[1]
-sys.path.insert(0, str(REPO))
+sys.path.insert(0, str(next(p for p in HERE.parents if (p / 'common' / '__init__.py').exists())))   # code_review/
 from common import env_capture, paths, replicas  # noqa: E402
 import parse_logs  # noqa: E402  (same folder)
 
@@ -82,7 +81,7 @@ def write_test_lists(loader):
                        'FASDD UAV test, FASDD CV test (concatenated in this order). Paths relative to ~/uav/datasets/. '
                        'The historical metrics used drop_last=True: only the first 24,320 images.',
         'total_images': offset, 'historical_protocol_images': N_PAPER, 'parts': manifest,
-        'generated_by': '02_audit/f0_selection_bias/eval_checkpoints.py'}, indent=2) + '\n')
+        'generated_by': 'code_review/train/02_audit/f0_selection_bias/eval_checkpoints.py'}, indent=2) + '\n')
     print(f'test lists written to {d} ({offset} images)')
 
 

@@ -19,6 +19,6 @@ El protocolo de evaluación del paper tiene tres problemas relacionados con los 
 
 A esto se suma la falta de semillas (R2-M3), que se resuelve en la misma campaña de reentrenamiento.
 
-Base de partida verificada: los modelos MobileNetV2 Nano FP32 y QAT del paper se reproducen exactamente con su código y sus pesos históricos (`01_replicas/mobilenet_paper`).
+Base de partida verificada: los modelos MobileNetV2 Nano FP32 y QAT del paper se reproducen exactamente con su código y sus pesos históricos (`code_review/train/01_replicas/mobilenet_paper`).
 
 **Detalle, análisis de estrategias, plan de detección de duplicados y evaluación de su impacto:** `01_dataset.md`.
