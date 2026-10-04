@@ -1,0 +1,116 @@
+[
+  {
+    "comparison": "Nano FP32 \u2192 QAT (quantization drop)",
+    "a": "nano_fp32",
+    "b": "nano_qat",
+    "paper_drop_pp": 0.48,
+    "drop_selected": 0.48,
+    "drop_last": 0.66,
+    "drop_last10_mean": 0.63
+  },
+  {
+    "comparison": "Nano QAT ReLU \u2192 ReLU6",
+    "a": "nano_qat",
+    "b": "nano_qat_relu6",
+    "paper_drop_pp": 1.26,
+    "drop_selected": 1.27,
+    "drop_last": 2.22,
+    "drop_last10_mean": 1.65
+  },
+  {
+    "comparison": "Nano QAT 8b \u2192 4b input",
+    "a": "nano_qat",
+    "b": "nano_qat_4binp",
+    "paper_drop_pp": 1.01,
+    "drop_selected": 1.02,
+    "drop_last": 1.43,
+    "drop_last10_mean": 1.24
+  },
+  {
+    "comparison": "Nano QAT 224 \u2192 160",
+    "a": "nano_qat",
+    "b": "nano_qat_160",
+    "paper_drop_pp": 1.14,
+    "drop_selected": 1.15,
+    "drop_last": 1.04,
+    "drop_last10_mean": 1.3
+  },
+  {
+    "comparison": "Nano QAT 224 \u2192 112",
+    "a": "nano_qat",
+    "b": "nano_qat_112",
+    "paper_drop_pp": 1.64,
+    "drop_selected": 1.64,
+    "drop_last": 2.15,
+    "drop_last10_mean": 1.86
+  },
+  {
+    "comparison": "Nano FP32 \u2192 ECA",
+    "a": "nano_fp32",
+    "b": "nano_eca",
+    "paper_drop_pp": 0.1,
+    "drop_selected": 0.09,
+    "drop_last": 0.14,
+    "drop_last10_mean": 0.12
+  },
+  {
+    "comparison": "Nano FP32 \u2192 MobileNetV2 width 0.1",
+    "a": "nano_fp32",
+    "b": "mbv2_width01",
+    "paper_drop_pp": 2.71,
+    "drop_selected": 2.71,
+    "drop_last": 2.8,
+    "drop_last10_mean": 2.79
+  },
+  {
+    "comparison": "Nano FP32 \u2192 MobilenetV3 Mini",
+    "a": "nano_fp32",
+    "b": "mbv3_mini",
+    "paper_drop_pp": 0.56,
+    "drop_selected": 0.56,
+    "drop_last": 0.53,
+    "drop_last10_mean": 0.6
+  },
+  {
+    "comparison": "BED Original \u2192 Simplified",
+    "a": "bed_original",
+    "b": "bed_simplified",
+    "paper_drop_pp": 0.08,
+    "drop_selected": 0.08,
+    "drop_last": 0.18,
+    "drop_last10_mean": 0.24
+  },
+  {
+    "comparison": "BED Quantized \u2192 BED FPGA (adaptation)",
+    "a": "bed_quantized",
+    "b": "bed_fpga",
+    "paper_drop_pp": 0.16,
+    "drop_selected": 0.17,
+    "drop_last": 0.07,
+    "drop_last10_mean": 0.2
+  },
+  {
+    "comparison": "Ref MobileNetV2 \u2192 Nano QAT (software)",
+    "a": "ref_mbv2",
+    "b": "nano_qat",
+    "paper_drop_pp": 2.2,
+    "drop_selected": 2.2,
+    "drop_last": 2.53,
+    "drop_last10_mean": 2.44
+  },
+  {
+    "comparison": "headline: ref MobileNetV2 - deployed Nano (selected; FPGA drop 0.13 assumed constant)",
+    "paper_drop_pp": 2.33,
+    "value_pp": 2.33
+  },
+  {
+    "comparison": "headline: ref MobileNetV2 - deployed Nano (last; FPGA drop 0.13 assumed constant)",
+    "paper_drop_pp": 2.33,
+    "value_pp": 2.67
+  },
+  {
+    "comparison": "headline: ref MobileNetV2 - deployed Nano (last10_mean; FPGA drop 0.13 assumed constant)",
+    "paper_drop_pp": 2.33,
+    "value_pp": 2.57
+  }
+]

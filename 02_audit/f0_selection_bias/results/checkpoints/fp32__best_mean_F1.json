@@ -1,0 +1,100 @@
+{
+  "model": "fp32",
+  "checkpoint": "best_mean_F1",
+  "file": "/home/gmoreno/uav/code/classifier_my_mobilenetv2/experiments/test_v04_mini_resnet_70k_full_ds/weights/MY_MBLNET_V2_classifier__best_mean_F1.pt",
+  "sha256": "c8385799d1771c5e9f055d9a9c19f66f7bb3606b2d2cbf655723b1733ad607f6",
+  "epoch": 86,
+  "historical_protocol_24320": {
+    "smoke": {
+      "TP": 10854,
+      "FP": 493,
+      "TN": 12362,
+      "FN": 611,
+      "Accuracy": 0.9546052631578947,
+      "Precision": 0.956552392702917,
+      "Recall": 0.9467073702573049,
+      "F1": 0.9516044187269859
+    },
+    "fire": {
+      "TP": 7742,
+      "FP": 387,
+      "TN": 16049,
+      "FN": 142,
+      "Accuracy": 0.9782483552631579,
+      "Precision": 0.9523926682248739,
+      "Recall": 0.9819888381532217,
+      "F1": 0.9669643414725536
+    },
+    "F1_macro": 0.9592843800997697
+  },
+  "full_test_24371": {
+    "smoke": {
+      "TP": 10876,
+      "FP": 494,
+      "TN": 12387,
+      "FN": 614,
+      "Accuracy": 0.9545361290057855,
+      "Precision": 0.9565523306948109,
+      "Recall": 0.9465622280243691,
+      "F1": 0.9515310586176728
+    },
+    "fire": {
+      "TP": 7760,
+      "FP": 387,
+      "TN": 16082,
+      "FN": 142,
+      "Accuracy": 0.9782938738664807,
+      "Precision": 0.9524978519700503,
+      "Recall": 0.9820298658567451,
+      "F1": 0.9670384447629136
+    },
+    "F1_macro": 0.9592847516902931
+  },
+  "check_vs_log": {
+    "log_epoch": 86,
+    "max_abs_diff_4dp": 0.0,
+    "matches_log": true,
+    "log_f1_macro": 0.9593
+  },
+  "seconds": 80.7,
+  "env": {
+    "timestamp": "2026-10-04T02:31:33+02:00",
+    "host": "nilo",
+    "argv": [
+      "eval_checkpoints.py",
+      "--model",
+      "fp32",
+      "--write-test-lists"
+    ],
+    "cwd": "/home/gmoreno/wildfire_paper_review/02_audit/f0_selection_bias",
+    "python": "3.10.13",
+    "executable": "/opt/conda/envs/pytorch_23/bin/python",
+    "conda_env": "base",
+    "platform": "Linux-5.15.0-139-generic-x86_64-with-glibc2.31",
+    "packages": {
+      "torch": "2.3.1",
+      "torchvision": "0.18.1",
+      "onnx": "1.16.1",
+      "albumentations": "1.4.10",
+      "torchmetrics": "1.4.0.post0",
+      "numpy": "1.26.4",
+      "opencv-python": "4.10.0",
+      "opencv-python-headless": "4.10.0.84",
+      "pillow": "10.3.0"
+    },
+    "git": {
+      "commit": "c2348cd590024c497ef66fdf830dcb2f9dd870af",
+      "branch": "main",
+      "dirty": true
+    },
+    "gpu_driver": "NVIDIA GeForce RTX 4070 Ti, 555.42.02, 12282 MiB",
+    "code_integrity": [],
+    "torch_cuda": "12.1",
+    "cudnn": 8902,
+    "cuda_available": true,
+    "gpu": "NVIDIA GeForce RTX 4070 Ti",
+    "extra": {
+      "replica_model": "fp32"
+    }
+  }
+}

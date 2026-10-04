@@ -49,7 +49,7 @@ Dependency order: `01_replicas` (trusted base) → `02_audit` (uses the replicas
 | `common/` infrastructure | Done (self-test: `common/results/selftest/`) |
 | `01_replicas/mobilenet_paper` | Done: MobileNetV2 Nano FP32 and Brevitas QAT (Tables 5, 7, 8) reproduced exactly (VERIFIED; max abs diff = 0 vs logs) |
 | `01_replicas/bed_paper` | Not started |
-| `02_audit/f0_selection_bias` | In progress |
+| `02_audit/f0_selection_bias` | Done 2026-10-04: selection effect +0.03–0.71 pp (larger for QAT/from-scratch models); conclusions keep their sign, but the "< 2.5 pp" headline is not robust (A-13); canonical test lists written |
 | `02_audit/f1_duplicates` | Planned (`paper_files/discussions/01_dataset.md`, P0–P7) |
 | `03_revision/*` | Not started; scope decided after F0/F1 |
 

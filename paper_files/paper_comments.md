@@ -14,6 +14,7 @@ Evidence levels: VERIFIED / STRONG EVIDENCE / INFERENCE / HYPOTHESIS / UNKNOWN.
 | 5 | Figure 9b (p. 13) vs. text / Table 9 | The PYNQ-Z1 power bar seems inconsistent with 144 mW | HYPOTHESIS | Open — needs check |
 | 6 | References [13] and [29] (p. 14) | Conference years look wrong | [29]: VERIFIED inconsistency; [13]: INFERENCE | Open — needs check |
 | 7 | Table 1, row FASDD CV, Test "Both" (p. 4) | 3558 should be 3358 (the row does not sum) | VERIFIED | Open |
+| 8 | Table 2, row MobileNetV3 (p. 8) | Parameters (1.52 M) and F1-Macro (97.07 %) come from two different runs | STRONG EVIDENCE | Open |
 
 ---
 
@@ -73,4 +74,12 @@ Evidence levels: VERIFIED / STRONG EVIDENCE / INFERENCE / HYPOTHESIS / UNKNOWN.
   - the Test "Total" row (Both 5556 = 895 + 1303 + 3358) is only consistent with 3358;
   - all other rows of Table 1 sum correctly.
 - **Proposed fix:** 3558 → 3358.
+
+## 8. Table 2 — MobileNetV3 row mixes two models
+
+- **Location:** Table 2 "Reference Models." (p. 8), row MobileNetV3: 1.52 M parameters, 55 M MAC, F1-Macro 97.07 %.
+- **Evidence (STRONG EVIDENCE, 2026-10-04, `02_audit/f0_selection_bias`):**
+  - F1-Macro 97.07 matches `~/uav/code/classifier_transfer_learning/experiments/test_v01_mobilenetv3_full_ds` (full fine-tuning session; best saved mean F1 0.9707), whose log reports **945,538** parameters (≈ 0.95 M);
+  - 1.52 M matches `test_v05_mobilenetv3Deep_full_ds` (**1,519,906** parameters), whose best F1-Macro is **97.16**.
+- **Proposed fix:** decide which model is the reference and report its own parameters, MAC and F1 (either 0.95 M / 97.07 or 1.52 M / 97.16). The MAC value (55 M) must be checked for the chosen model.
 

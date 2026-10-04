@@ -403,3 +403,22 @@ Tras S1/S2 ya se tienen L0–L2 baratos. Si la contaminación exacta ya fuera al
 - **D-F1b:** ¿aceptas las reglas de decisión R-a/R-b/R-c (umbrales de 1 % de contaminación y 0.2 pp) antes de ver los datos?
 - **D-F1c:** criterio por defecto del test limpio: L0–L2 + L3 estricto (propuesto), o solo L0–L2.
 - **D-F1d:** ¿se limpia también el entrenamiento en F3 (E4)? Lo recomiendo.
+
+---
+
+## Resultado de F0 (2026-10-04) — sesgo de selección
+
+Detalle: `02_audit/f0_selection_bias/README.md`.
+
+- **Los logs reflejan fielmente los checkpoints (VERIFIED).** Los checkpoints `best_mean_F1`, `best_loss` y `last` de los dos Nano reproducen exactamente las métricas por época del log. Por eso el análisis basado en logs es válido para todos los runs del paper.
+- **Los 18 runs del paper se recuperan desde sus logs.** Hay procedencia nueva para la Tabla 2 (MobileNetV2, ShuffleNetV2, MobileViTV3) y para MobilenetV3 Mini. La fila MobileNetV3 de la Tabla 2 mezcla dos modelos (A-11).
+- **Efecto de elegir el checkpoint con el test** (frente a la media de las 10 últimas épocas):
+  - +0.03 a +0.15 pp en las referencias con transfer learning;
+  - +0.18 a +0.36 pp en los modelos FP32 entrenados desde cero;
+  - +0.33 a +0.71 pp en los modelos QAT.
+- **Consecuencia:** ninguna comparación del paper cambia de signo, pero las penalizaciones de cuantización, ReLU6 y 4-bit input son algo mayores. **La afirmación "< 2.5 pp" frente a la referencia deja de cumplirse** con aproximaciones sin selección (2.57–2.67 pp; A-13, INFERENCE). Esto refuerza la necesidad de F3.
+- **Coste de F3, revisado con datos medidos:**
+  - hoy un entrenamiento rinde unas 153 img/s, unas 21 h por 100 épocas, aproximadamente el doble de lo que tardaron en 2024;
+  - 2 procesos en paralelo casi duplican el rendimiento total;
+  - construir el dataset añade unos 45 min fijos por run.
+  - **Tier 1 (12 runs): unos 9.5 días en secuencial, unos 5 días con 2 procesos en paralelo.**

@@ -1,0 +1,26 @@
+{
+  "description": "Paper test set (Table 1) in the exact order of get_val_loader(): DFire test, FASDD UAV test, FASDD CV test (concatenated in this order). Paths relative to ~/uav/datasets/. The historical metrics used drop_last=True: only the first 24,320 images.",
+  "total_images": 24371,
+  "historical_protocol_images": 24320,
+  "parts": [
+    {
+      "file": "dfire_test.tsv",
+      "images": 4306,
+      "loader_offset": 0,
+      "sha256": "4661e859a04e43a7cfeece1e9768947cbb3a55cd31f7acd02abbd4600988e0a4"
+    },
+    {
+      "file": "fasdd_uav_test.tsv",
+      "images": 4181,
+      "loader_offset": 4306,
+      "sha256": "c1b882780d51e1262ca4526185ab1fdd9df5af49240804065101e2ff083b0c7c"
+    },
+    {
+      "file": "fasdd_cv_test.tsv",
+      "images": 15884,
+      "loader_offset": 8487,
+      "sha256": "f450cfd6ca3bb045bb23976c83da99666f4693216ea652b0681f940a15e69ac2"
+    }
+  ],
+  "generated_by": "02_audit/f0_selection_bias/eval_checkpoints.py"
+}
