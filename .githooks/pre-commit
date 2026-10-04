@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Reject any commit that adds or modifies a file larger than 1 MB (staged size).
+# Blocked attempts are logged to .git/large_files_blocked.log for later review.
+# Do not bypass with --no-verify: see CLAUDE.md, "Git commits and large files".
+set -euo pipefail
+LIMIT=$((1024 * 1024))
+log="$(git rev-parse --git-dir)/large_files_blocked.log"
+too_big=()
+while IFS= read -r -d '' f; do
+  size=$(git cat-file -s ":$f" 2>/dev/null || echo 0)
+  if [ "$size" -gt "$LIMIT" ]; then
+    too_big+=("$size  $f")
+  fi
+done < <(git diff --cached --name-only --diff-filter=AMR -z)
+
+if [ ${#too_big[@]} -gt 0 ]; then
+  {
+    echo "=== $(date -Is) commit BLOCKED (limit 1 MB) on branch $(git rev-parse --abbrev-ref HEAD) at $(git rev-parse --short HEAD 2>/dev/null || echo none)"
+    printf '  %s\n' "${too_big[@]}"
+  } >> "$log"
+  echo "pre-commit: commit BLOCKED. Files larger than 1 MB (bytes  path):" >&2
+  printf '  %s\n' "${too_big[@]}" >&2
+  echo "Logged to $log. Review them, then exclude (.gitignore) or approve explicitly." >&2
+  exit 1
+fi
+exit 0

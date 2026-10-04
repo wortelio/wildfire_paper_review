@@ -128,6 +128,16 @@ Act as an expert assistant in:
 
 Pay particular attention to dependency/version compatibility and reproducibility.
 
+## Git commits and large files
+
+- A versioned pre-commit hook (`.githooks/pre-commit`, enabled with `git config core.hooksPath .githooks`) **rejects any commit that adds, modifies or renames a file larger than 1 MB** (staged size). Each blocked attempt is appended to `.git/large_files_blocked.log`.
+- When a commit is blocked:
+  1. **Do not bypass the hook:** no `--no-verify`, no disabling the hook, no splitting or compressing files to sneak them in, no silently changing `.gitignore` to hide them.
+  2. **Do not make that commit.** Leave the changes uncommitted, and keep working on the remaining tasks that do not need it (long runs in tmux keep going).
+  3. Report the blocked commit and the large files in the next message to the user. The user decides afterwards: exclude the file (`.gitignore`, `artifacts/`), or explicitly approve committing it.
+- Large outputs (weights, predictions, embeddings, executed notebooks with big outputs) belong in git-ignored `artifacts/` folders by design.
+- Long tasks run inside the tmux session `review`. Long computations are launched detached (`setsid`/`nohup`) with logs on disk, and scripts are resumable (they skip results that already exist), so an SSH disconnection does not lose work.
+
 ## Change policy
 
 Before scientifically meaningful changes:
