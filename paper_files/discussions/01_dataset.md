@@ -236,7 +236,7 @@ Esto responde de una vez a la objeción más grave de R3 y a la petición explí
 
 ## Plan detallado: detección de duplicados, impacto y exclusión en test (2026-10-04)
 
-Responde a R2-M2. También prepara las particiones por grupos de F2 (R3-1). Se implementa en `results_audit/f1_duplicates/`. Reglas: `~/uav` es de solo lectura, los datasets no se modifican nunca y todo filtrado se hace con **listas de ficheros versionadas**.
+Responde a R2-M2. También prepara las particiones por grupos de F2 (R3-1). Se implementa en `02_audit/f1_duplicates/`. Reglas: `~/uav` es de solo lectura, los datasets no se modifican nunca y todo filtrado se hace con **listas de ficheros versionadas**.
 
 ### P0. Datos de partida (VERIFIED, 2026-10-04)
 
@@ -248,7 +248,7 @@ Responde a R2-M2. También prepara las particiones por grupos de F2 (R3-1). Se i
 | **Total** | **117,567** | **24,371** | ≈ 30 GB | — |
 
 - **Errata detectada en la Tabla 1 (VERIFIED):** el test de FASDD CV tiene **3358** imágenes "Both", no 3558. Con 3558 la fila suma 16,084 en lugar de 15,884, y la fila Total (Both 5556 = 895 + 1303 + 3358) solo cuadra con 3358. Se anota en `paper_comments.md`.
-- **Ventaja de partida:** para los dos modelos Nano ya existen las predicciones por imagen sobre las 24,371 imágenes de test (`results_audit/mobilenet_paper_replica/results/predictions__*.csv`). Para ellos, el impacto de los duplicados se calcula sin volver a ejecutar inferencia.
+- **Ventaja de partida:** para los dos modelos Nano ya existen las predicciones por imagen sobre las 24,371 imágenes de test (`01_replicas/mobilenet_paper/results/predictions__*.csv`). Para ellos, el impacto de los duplicados se calcula sin volver a ejecutar inferencia.
 
 ### P1. Qué es un "duplicado": niveles y alcance
 
@@ -269,7 +269,7 @@ Comparaciones, por orden de importancia:
 3. **Dentro del pool de entrenamiento.** Sirve para que en F2 la validación se forme por grupos.
 4. **Dentro del test.** No es fuga, pero sobrepondera algunas escenas y se informa como estadística.
 
-### P2. Pipeline de detección (scripts en `results_audit/f1_duplicates/`)
+### P2. Pipeline de detección (scripts en `02_audit/f1_duplicates/`)
 
 **S0 — Inventario (manifest).**
 - Se construye la lista exacta de imágenes que usan los dataloaders del paper, reutilizando las clases `DFireDataset` y `FASDDDataset` de la réplica. Así se aplica el mismo filtrado ("Removed wrong images") y el mismo orden.
@@ -349,7 +349,7 @@ Pasos:
 ### P4. Estrategia de manejo de duplicados: que no se usen en la evaluación
 
 1. **E1 — Test limpio canónico.**
-   - Se versionan `results_audit/f1_duplicates/results/splits/test_clean.txt` (rutas relativas) y `test_contaminated.csv` (ruta, nivel, motivo, imagen del pool con la que coincide y similitud).
+   - Se versionan `dataset_review_split/test_clean.txt` (rutas relativas) y `test_contaminated.csv` (ruta, nivel, motivo, imagen del pool con la que coincide y similitud).
    - Criterio por defecto (propuesta): quitar del test toda imagen de un clúster L0–L2 que incluya alguna imagen del pool, más las L3 por encima del **umbral estricto** calibrado en S5.
    - Las L3 entre el umbral estricto y el conservador se informan como análisis de sensibilidad.
 2. **E2 — Filtrado en el dataloader.**

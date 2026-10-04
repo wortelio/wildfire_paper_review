@@ -7,6 +7,7 @@ import torch
 # The model is selected with the environment variable REPLICA_MODEL (default 'fp32'):
 #   fp32     -> experiments/test_v04_mini_resnet_70k_full_ds          (FP32, epoch 86;  conda env pytorch_23)
 #   brevitas -> experiments_brevitas/test_v05_mini_resnet_70k_full_ds (QAT,  epoch 91;  conda env pytorch_brevitas)
+REPLICA_DIR = os.path.dirname(os.path.abspath(__file__)) + '/'  # REPLICA: paths below do not depend on the working directory
 UAV_DATASETS = os.path.expanduser('~/uav/datasets/')   # REPLICA: absolute, read-only dataset root
 REPLICA_MODEL = os.environ.get('REPLICA_MODEL', 'fp32')  # REPLICA
 assert REPLICA_MODEL in ('fp32', 'brevitas'), REPLICA_MODEL  # REPLICA
@@ -29,7 +30,7 @@ PAPER_RUN_DIR = PAPER_RUNS[REPLICA_MODEL]['run_dir']  # REPLICA
 # ______________________________________________________________________ #
 #                                Logs                                    #
 # ______________________________________________________________________ #
-RUN_FOLDER = 'outputs/'  # REPLICA: local, git-ignored (was experiments_comparison/figlib_dataset/test_v21_...)
+RUN_FOLDER = REPLICA_DIR + 'outputs/'  # REPLICA: local, git-ignored (was experiments_comparison/figlib_dataset/test_v21_...)
 if not os.path.isdir(RUN_FOLDER):
     os.mkdir(RUN_FOLDER)
 LOGS_FOLDER = RUN_FOLDER + 'logs/'
@@ -167,7 +168,7 @@ PIN_MEMORY = True
 EPOCHS = 100  # REPLICA: log "Epochs: 100"; was 5
 
 LOAD_MODEL = False
-LOAD_MODEL_DIR = 'weights/'  # REPLICA: local byte-identical copy of PAPER_RUN_DIR + 'weights/' (see README); was ./experiments_brevitas/test_v05_.../weights/
+LOAD_MODEL_DIR = REPLICA_DIR + 'weights/'  # REPLICA: local byte-identical copy of PAPER_RUN_DIR + 'weights/' (see README); was ./experiments_brevitas/test_v05_.../weights/
 LOAD_MODEL_FILE = LOAD_MODEL_DIR + PAPER_RUNS[REPLICA_MODEL]['weights']  # REPLICA: best-F1 checkpoint (fp32: epoch 86, brevitas: epoch 91; VERIFIED identical tensors to the epoch files)
 ORIGINAL_MODEL_FILE = PAPER_RUN_DIR + 'weights/' + PAPER_RUNS[REPLICA_MODEL]['weights']  # REPLICA: source of the local copy
 MODEL_FILE_SHA256 = PAPER_RUNS[REPLICA_MODEL]['sha256']  # REPLICA: sha256 of both files

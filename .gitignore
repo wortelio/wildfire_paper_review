@@ -1,13 +1,21 @@
 # Paper pdf
 *.pdf
-# results_audit: large, non-versioned outputs
-results_audit/**/artifacts/
-results_audit/**/*.pt
-results_audit/**/*.pth
-results_audit/**/*.onnx
-results_audit/**/*.npy
-results_audit/**/*.npz
+# Review work (common/, 01_replicas/, 02_audit/, 03_revision/): large, non-versioned outputs
+**/artifacts/
+**/outputs/
+common/**/*.pt
+01_replicas/**/*.pt
+02_audit/**/*.pt
+03_revision/**/*.pt
+common/**/*.pth
+01_replicas/**/*.pth
+02_audit/**/*.pth
+03_revision/**/*.pth
+01_replicas/**/*.onnx
+02_audit/**/*.onnx
+03_revision/**/*.onnx
+**/*.npy
+**/*.npz
+**/predictions__*.csv
 __pycache__/
 *.pyc
-results_audit/**/outputs/
-results_audit/**/predictions__*.csv

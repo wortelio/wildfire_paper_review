@@ -6,7 +6,7 @@ changes alter files used by the paper runs: for example,
 bed_05_brevitas_fpga_old_small_big.py no longer defines the deployed BED FPGA
 architecture of Table 4. Audits of paper runs therefore import code from a
 paper-era revision, extracted read-only with `git archive` into
-results_audit/common/artifacts/snapshots/<rev>/ (git-ignored).
+common/artifacts/snapshots/<rev>/ (git-ignored).
 
 Known revisions:
   455f115  2025-02-28  "Code folder updated: BED evol, all MobilenetV2 last experiments"

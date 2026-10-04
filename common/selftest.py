@@ -1,6 +1,6 @@
 """Self-test of the audit infrastructure (task T1).
 
-Run from results_audit/ with each conda environment to be used:
+Run from the repository root with each conda environment to be used:
     /opt/conda/envs/pytorch_brevitas/bin/python -m common.selftest
     /opt/conda/envs/pytorch_23/bin/python -m common.selftest
 
@@ -40,7 +40,7 @@ def check_guard():
     out = {}
     out['uav_protected'] = write_guard.is_protected(paths.UAV_ROOT / 'code' / 'x.txt')
     out['code_protected'] = write_guard.is_protected(paths.REPO_ROOT / 'code' / 'train' / 'x.txt')
-    out['audit_not_protected'] = not write_guard.is_protected(paths.AUDIT_ROOT / 'x.txt')
+    out['audit_not_protected'] = not write_guard.is_protected(paths.AUDIT_DIR / 'x.txt')
     scratch = Path(tempfile.mkdtemp(prefix='wg_selftest_'))
     write_guard.install(extra_protected=[scratch])
     blocked = {}
@@ -110,7 +110,7 @@ def main():
     for fam in families:
         for rev in (None, snapshot.PAPER_ERA_REV):
             cmd = [sys.executable, '-m', 'common.selftest', '--family', fam] + (['--rev', rev] if rev else [])
-            p = subprocess.run(cmd, cwd=paths.AUDIT_ROOT, capture_output=True, text=True)
+            p = subprocess.run(cmd, cwd=paths.REPO_ROOT, capture_output=True, text=True)
             last = p.stdout.strip().splitlines()[-1] if p.stdout.strip() else ''
             key = f'{fam}@{rev or "active"}'
             try:

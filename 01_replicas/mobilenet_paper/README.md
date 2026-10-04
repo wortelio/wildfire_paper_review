@@ -1,4 +1,6 @@
-# mobilenet_paper_replica — MobileNetV2 Nano (FP32 and Brevitas QAT)
+# 01_replicas/mobilenet_paper — MobileNetV2 Nano (FP32 and Brevitas QAT)
+
+(Until 2026-10-04 this folder was `results_audit/mobilenet_paper_replica/`; earlier results and executed notebooks still show that path.)
 
 Minimal, self-contained copy of the historical code needed to rebuild the two **MobileNetV2 Nano** models reported in the paper, load their weights and evaluate them on the paper test set. It is the trusted baseline for later automation. Code duplication with `code/train/mobilenet` and `results_audit/common` is intentional at this stage.
 
@@ -33,7 +35,7 @@ Minimal, self-contained copy of the historical code needed to rebuild the two **
 
 ## Weights
 
-Both files are byte-identical copies (`cp -p`; `cmp` OK). They are **not versioned in git** (too large; `results_audit/**/*.pt` is ignored), so they must be re-copied from `~/uav` on a fresh clone.
+Both files are byte-identical copies (`cp -p`; `cmp` OK). They are **not versioned in git** (too large; `01_replicas/**/*.pt` is ignored), so they must be re-copied from `~/uav` on a fresh clone.
 
 | File in `weights/` | Copied from (full path) | Size | sha256 | md5 | Original mtime |
 |---|---|---|---|---|---|
@@ -68,13 +70,14 @@ All copied from `code/train/mobilenet/` (= `~/uav` HEAD; sha256 and identity in 
 ## How to run
 
 ```bash
-cd ~/wildfire_paper_review/results_audit/mobilenet_paper_replica
+cd ~/wildfire_paper_review/01_replicas/mobilenet_paper
 ./run_validation.sh            # both models; or: ./run_validation.sh fp32 / ./run_validation.sh brevitas
 ```
 
 - Each model runs in its original training environment: `fp32` → `pytorch_23`, `brevitas` → `pytorch_brevitas`.
 - The script sets `NO_ALBUMENTATIONS_UPDATE=1`, which stops albumentations from checking online for a newer version.
-- The notebook installs `results_audit/common/write_guard`, so any write to `~/uav` or `code/` aborts.
+- The notebook installs `common/write_guard` (repository root), so any write to `~/uav` or `code/` aborts.
+- From other folders (e.g. `02_audit/`), load this replica with `common.replicas.use('mobilenet_paper', model='fp32'|'brevitas')`. `config.py` resolves `weights/` and `outputs/` relative to this folder (`REPLICA_DIR`, added 2026-10-04), so it does not depend on the working directory.
 - Outputs:
   - `validate_paper_metrics.executed_<model>.ipynb`;
   - `results/validate_paper_metrics__<model>__<run>__epoch<N>.json` (metrics + provenance, versioned);

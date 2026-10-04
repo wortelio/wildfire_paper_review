@@ -60,7 +60,7 @@ def build_config(family, run_dir, fixed=None, allow_new=(), code_root=None):
     family    : key of paths.FAMILIES
     code_root : folder with config.py and modules/ (default: active copy in code/train;
                 use snapshot.materialize(family, rev) for a historical ~/uav revision)
-    run_dir   : directory for this run's outputs (inside results_audit/.../artifacts)
+    run_dir   : directory for this run's outputs (inside <experiment>/artifacts)
     fixed     : {NAME: value} frozen before executing config.py
     allow_new : names in `fixed` that do not exist in config.py (otherwise an error,
                 to catch typos that would silently do nothing)

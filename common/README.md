@@ -1,7 +1,10 @@
 # Common infrastructure (T1)
 
-Run every audit entry point from `results_audit/` with the conda environment of the historical run:
-`/opt/conda/envs/<env>/bin/python -m <phase>.<script>`
+Scripts run with their own folder as working directory and find the repository root from their own path. Use the conda environment of the historical run:
+- scripts: `cd <experiment folder> && /opt/conda/envs/<env>/bin/python <script>.py`;
+- the self-test: `cd <repo root> && /opt/conda/envs/<env>/bin/python -m common.selftest`.
+
+Numbered folders (`01_replicas`, `02_audit`, `03_revision`) are not Python packages. Scripts in them add the repository root to `sys.path` and import `common`. Replicas are loaded with `common.replicas.use()`.
 
 | Module | Purpose |
 |---|---|
@@ -9,6 +12,7 @@ Run every audit entry point from `results_audit/` with the conda environment of 
 | `write_guard.py` | Python audit hook (PEP 578) that aborts any write under `~/uav` or `<repo>/code`. Call `write_guard.install()` first. It does not intercept writes from C code that bypasses Python I/O (e.g. `cv2.imwrite`) |
 | `config_shim.py` | `build_config(family, run_dir, fixed, code_root)` executes the historical `config.py` unchanged, ignoring assignments to `fixed` keys and resolving relative paths against the historical folder in `~/uav`. `load_family()` registers it as `config` and exposes the original `modules` package (one family per process; no `__pycache__` written) |
 | `snapshot.py` | `materialize(family, rev)` extracts the family code at a `~/uav` git revision (read-only `git archive`) into `artifacts/snapshots/`. `PAPER_ERA_REV = 455f115` |
+| `replicas.py` | `use(name, model)`: makes `01_replicas/<name>` importable (its `config` and `modules`) from any working directory; one replica per process |
 | `env_capture.py` | Provenance record: git commit/dirty, conda env, package versions, CUDA/cuDNN/GPU, and byte-identity of `code/train/<family>` with `~/uav` |
 | `selftest.py` | Infrastructure self-test (see results below) |
 
