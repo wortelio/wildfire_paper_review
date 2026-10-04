@@ -13,6 +13,25 @@ Problemas detectados por nosotros, no por los revisores. Su definición completa
 | A-10 | Errata en la Tabla 1: en el test de FASDD CV, "Both" es 3358, no 3558 | VERIFIED |
 Explicación general del problema: `00_discussion.md` → "Dataset".
 
+## Contexto del autor y enfoque de la respuesta (2026-10-04)
+
+**Reflexión del autor**, resumida fielmente:
+- El paper se centra principalmente en optimizar modelos para su implementación en hardware de bajo consumo.
+- La elección del caso de uso es uno de los "pecados originales" de la investigación, y la valoración es ambivalente:
+  - por un lado, debería haberse elegido un caso de uso con un dataset estándar y bien establecido, para concentrar el esfuerzo en el hardware y no exponerse a los problemas actuales por la falta de un benchmark estándar de detección de incendios;
+  - por otro lado, el caso de uso es interesante, motivador y de actualidad.
+- El problema de fondo es que el caso de uso concreto no se trató con la rigurosidad necesaria. Fue por falta de experiencia: el autor hizo prácticamente toda la investigación solo, sin una guía científica adecuada, hace unos dos años, cuando la IA aún no estaba extendida.
+
+**Implicación para la estrategia:**
+- Las objeciones sobre el dataset se resuelven con una solución **robusta y honesta, proporcionada a lo que piden los revisores**, sin convertir el paper en un trabajo sobre datasets.
+- El esfuerzo principal se reserva para las objeciones ligadas a la contribución de hardware (Tabla 9, potencia, comparación con trabajos FPGA, F1 en FPGA).
+
+**Propuesta revisada para F1** (pendiente de confirmación del autor):
+- Solo L0–L2, con hash exacto, hash de píxeles a 224 y hash perceptual (pHash/dHash, también sobre la imagen volteada), implementados con OpenCV y NumPy en los entornos existentes. Sin entorno nuevo y sin descarga de pesos, lo que resuelve D-F1a.
+- Umbrales conservadores y una comprobación visual breve (30–50 pares).
+- L3 con SSCD/DINOv2 se menciona como trabajo futuro, salvo que L0–L2 muestre una contaminación apreciable.
+- Riesgo estimado de rechazo atribuible a no hacer L3: ≈ 1–3 % (INFERENCE).
+
 Contenido:
 1. Propuesta inicial de estrategias (usuario).
 2. Comentarios de Claude (2026-10-03, secciones 1–8), trasladados sin cambios desde `00_discussion.md`.

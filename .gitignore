@@ -1,5 +1,6 @@
 # Paper pdf
 *.pdf
+
 # Review work (code_review/): large, non-versioned outputs
 **/artifacts/
 **/outputs/
@@ -11,3 +12,6 @@ code_review/**/*.onnx
 **/predictions__*.csv
 __pycache__/
 *.pyc
+
+# Prompts for Claude
+/prompts
